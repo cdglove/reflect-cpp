@@ -1,6 +1,6 @@
 // *****************************************************************************
 // 
-// reflect/serialize/write_binary.hpp
+// reflect/serialize/simple_binary_writer.hpp
 //
 // Converts an instance into a flat binary stream.
 //
@@ -12,18 +12,18 @@
 //
 // ****************************************************************************
 #pragma once 
-#ifndef REFLECT_SERIALIZE_WRITEBINARY_HPP_
-#define REFLECT_SERIALIZE_WRITEBINARY_HPP_
+#ifndef REFLECT_SERIALIZE_SIMPLEBINARYWRITER_HPP_
+#define REFLECT_SERIALIZE_SIMPLEBINARYWRITER_HPP_
 
 #include "reflect/reflect_type.hpp"
 
 namespace reflect { namespace serialize {
 
 template<typename T, typename Stream>
-class write_binary
+class simple_binary_writer
 {
 public:
-	write_binary(T& t, Stream& s)
+	simple_binary_writer(T& t, Stream& s)
 		: instance_(t)
 		, stream_(s)
 	{}
@@ -31,7 +31,7 @@ public:
 	template<typename Child, typename Parent>
 	void member(char const* name, Child Parent::*member)
 	{
-	 	write_binary<Child, Stream> write_child(instance_.*member, stream_);
+	 	simple_binary_writer<Child, Stream> write_child(instance_.*member, stream_);
 		reflect_type<value_type>(write_child, _first_ver);
 	}
 
@@ -47,7 +47,7 @@ public:
 
 		for(auto&& i : instance_)
 		{
-			write_binary<value_type, Stream> write_child(i, stream_);
+			simple_binary_writer<value_type, Stream> write_child(i, stream_);
 			reflect_type<value_type>(write_child, _first_ver);
 		}
 	}
@@ -63,4 +63,4 @@ private:
 	Stream& stream_;
 };
 
-#endif // REFLECT_SERIALIZE_WRITEBINARY_HPP_
+#endif // REFLECT_SERIALIZE_SIMPLEBINARYWRITER_HPP_

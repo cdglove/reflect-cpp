@@ -1,6 +1,6 @@
 // *****************************************************************************
 // 
-// reflect/serialize/read_binary.hpp
+// reflect/serialize/simple_binary_reader.hpp
 //
 // Converts an flat binary stream into an instance
 //
@@ -12,18 +12,18 @@
 //
 // ****************************************************************************
 #pragma once 
-#ifndef REFLECT_SERIALIZE_READBINARY_HPP_
-#define REFLECT_SERIALIZE_READBINARY_HPP_
+#ifndef REFLECT_SERIALIZE_SIMPLEBINARYREADER_HPP_
+#define REFLECT_SERIALIZE_SIMPLEBINARYREADER_HPP_
 
 #include "reflect/reflect_type.hpp"
 
 namespace reflect { namespace serialize {
 
 template<typename T, typename Stream>
-class read_binary
+class simple_binary_reader
 {
 public:
-	read_binary(T& t, Stream& s)
+	simple_binary_reader(T& t, Stream& s)
 		: instance_(t)
 		, stream_(s)
 	{}
@@ -31,7 +31,7 @@ public:
 	template<typename Child, typename Parent>
 	void member(char const* name, Child Parent::*member)
 	{
-	 	read_binary<Child, Stream> read_child(instance_.*member, stream_);
+	 	simple_binary_reader<Child, Stream> read_child(instance_.*member, stream_);
 		reflect_type<value_type>(read_child, _first_ver);
 	}
 
@@ -47,7 +47,7 @@ public:
 
 		for(auto&& i : instance_)
 		{
-			read_binary<value_type, Stream> read_child(i, stream_);
+			simple_binary_reader<value_type, Stream> read_child(i, stream_);
 			reflect_type<value_type>(read_child, _first_ver);
 		}
 	}
@@ -63,4 +63,4 @@ private:
 	Stream& stream_;
 };
 
-#endif // REFLECT_SERIALIZE_READBINARY_HPP_
+#endif // REFLECT_SERIALIZE_SIMPLEBINARYREADER_HPP_
