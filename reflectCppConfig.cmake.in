@@ -1,0 +1,18 @@
+# - Config file for the daily package
+# It defines the following variables
+#  REFLECT_INCLUDE_DIRS	  - include directories for reflect-cpp
+#  REFLECT_LIBRARIES      - libraries to link against (full path)
+ 
+# Compute paths
+get_filename_component(REFLECT_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(REFLECT_INCLUDE_DIRS "include/")
+ 
+# Our library dependencies (contains definitions for IMPORTED targets)
+if(    NOT TARGET reflect-cpp
+   AND NOT REFLECT_BINARY_DIR)
+  include("${REFLECT_CMAKE_DIR}/reflectCppTargets.cmake")
+endif()
+ 
+# These are IMPORTED targets created by reflectCppTargets.cmake
+set(REFLECT_LIBRARIES reflect-cpp)
+
