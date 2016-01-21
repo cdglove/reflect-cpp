@@ -20,13 +20,7 @@
 
 int main()
 {
-	ns::Parent1 obj;
-	
-	reflect::reflector<
-		reflect::serialize::print_names
-	> name_printer;
-
-	name_printer(reflect::tag<ns::Parent1>(), std::cout);
-	
+	reflect::serialize::print_names name_printer(std::cout);
+	reflect::reflect_type<ns::Parent1>(name_printer, reflect::_first_ver);
 	return 0;
 }

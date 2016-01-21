@@ -31,11 +31,12 @@ int main()
 	
 	std::stringstream archive;
 
-	reflect::serialize::simple_binary_writer<
+	reflect::serialize::detail::simple_binary_writer_impl<
+		ns::Parent1,
 		std::stringstream
-	> binary_writer(archive);
+	> binary_writer(obj, archive);
 
-	binary_writer(obj);
+	reflect::reflect_type<ns::Parent1>(binary_writer, reflect::_first_ver);
 
 	obj.f_.a_ = 0;
 	obj.f_.b_ = 0;
