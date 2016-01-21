@@ -15,8 +15,8 @@
 #pragma once 
 
 #include <vector>
-#include "reflect/std/vector.hpp"
-#include "reflect/primitives.hpp"
+#include "reveal/std/vector.hpp"
+#include "reveal/primitives.hpp"
 
 namespace ns
 {
@@ -27,10 +27,12 @@ namespace ns
 	};
 
 	template<typename Visitor>
-	void reflect(Visitor& v, reflect::version_t, reflect::tag<Child1>)
+	auto reflect(Visitor& v, reveal::version_t, reveal::tag<Child1>)
 	{
-		v.member("a_", &Child1::a_);
-		v.member("b_", &Child1::b_);
+		return v
+			.member("a_", &Child1::a_)
+			.member("b_", &Child1::b_)
+		;
 	}
 
 	struct Child2
@@ -40,10 +42,12 @@ namespace ns
 	};
 
 	template<typename Visitor>
-	void reflect(Visitor& v, reflect::version_t, reflect::tag<Child2>)
+	auto reflect(Visitor& v, reveal::version_t, reveal::tag<Child2>)
 	{
-		v.member("c_", &Child2::c_);
-		v.member("d_", &Child2::d_);
+		return v
+			.member("c_", &Child2::c_)
+			.member("d_", &Child2::d_)
+		;
 	}
 
 	struct Parent1
@@ -53,9 +57,11 @@ namespace ns
 	};
 
 	template<typename Visitor>
-	void reflect(Visitor& v, reflect::version_t, reflect::tag<Parent1>)
+	auto reflect(Visitor& v, reveal::version_t, reveal::tag<Parent1>)
 	{
-		v.member("f_", &Parent1::f_);
-		v.member("s_", &Parent1::s_);
+		return v
+			.member("f_", &Parent1::f_)
+			.member("s_", &Parent1::s_)
+		;
 	}
 }

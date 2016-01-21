@@ -1,6 +1,6 @@
 // *****************************************************************************
 // 
-// reflect/test/binary_reader_writer.cpp
+// reveal/test/binary_reader_writer.cpp
 //
 // Tests the functionality of the binary reader and writer.
 //
@@ -14,9 +14,9 @@
 #include <sstream>
 #include <cassert>
 
-#include "reflect/reflect_type.hpp"
-#include "reflect/serialize/simple_binary_writer.hpp"
-#include "reflect/serialize/simple_binary_reader.hpp"
+#include "reveal/reflect_type.hpp"
+#include "reveal/serialize/simple_binary_writer.hpp"
+#include "reveal/serialize/simple_binary_reader.hpp"
 #include "test_user_types.hpp"
 
 int main()
@@ -31,7 +31,7 @@ int main()
 	
 	std::stringstream archive;
 
-	reflect::serialize::simple_binary_writer<
+	reveal::serialize::simple_binary_writer<
 		std::stringstream
 	> binary_writer(archive);
 
@@ -42,7 +42,7 @@ int main()
 	obj.s_.c_.clear();
 	obj.s_.d_ = 0;
 
-	reflect::serialize::simple_binary_reader<
+	reveal::serialize::simple_binary_reader<
 		std::stringstream
 	> binary_reader(archive);
 
