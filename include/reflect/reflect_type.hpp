@@ -48,13 +48,13 @@ public:
 
 // -----------------------------------------------------------------------------
 // 
-template<typename T, typename Visitor>
+template<typename Visitor>
 class reflector
 {
 public:
 
-	template<typename... Ps>
-	void operator()(Ps&... p)
+	template<typename T, typename... Ps>
+	void operator()(tag<T>, Ps&... p)
 	{
 		Visitor visit(p...);
 		reflect_type<T>(visit, reflect::_first_ver);

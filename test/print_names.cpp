@@ -1,6 +1,6 @@
 // *****************************************************************************
 // 
-// reflect/test/print_names.hpp
+// reflect/test/print_names.cpp
 //
 // Uses reflection to print the names of all of the mamber variables of a type
 // hierarchy.
@@ -23,11 +23,10 @@ int main()
 	ns::Parent1 obj;
 	
 	reflect::reflector<
-		ns::Parent1, 
 		reflect::serialize::print_names
 	> name_printer;
 
-	name_printer(std::cout);
+	name_printer(reflect::tag<ns::Parent1>(), std::cout);
 	
 	return 0;
 }

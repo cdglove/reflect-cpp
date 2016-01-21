@@ -26,3 +26,4 @@ function(create_test test_name test_source test_defines)
 endfunction(create_test)
 
 create_test(test.print_names print_names.cpp "")
+create_test(test.simple_binary simple_binary_reader_writer.cpp "")
