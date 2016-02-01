@@ -52,6 +52,13 @@ set(CMAKE_CXX_STANDARD 14)
 
 ###############################################################################
 #
+# Configure packages
+#
+###############################################################################
+include(contrib/cmaketools/external_git.cmake)
+
+###############################################################################
+#
 # If using IWUY, we generate from fake cpp files to compile.  Their only`
 # job is to include the corresponding header file.
 #
@@ -75,8 +82,32 @@ add_library(reveal-cpp INTERFACE)
 target_sources(reveal-cpp INTERFACE ${PROJECT_HEADERS})
 target_include_directories(reveal-cpp INTERFACE "include/")
 
+###############################################################################
+#
+# See if w'ere testing.
+#
+###############################################################################
 if(REFLECT_BUILD_TESTS)
   enable_testing()
+
+  #############################################################################
+  #
+  # Add google test
+  #
+  #############################################################################
+  include(contrib/cmaketools/DownloadProject.cmake)
+  download_project(
+    PROJ                googletest
+    GIT_REPOSITORY      https://github.com/google/googletest.git
+    GIT_TAG             master
+  )
+
+  # Prevent GoogleTest from overriding our compiler/linker options
+  # when building with Visual Studio
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+  add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
+
 	add_subdirectory(test)
 endif()
 

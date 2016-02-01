@@ -23,20 +23,27 @@
 //
 namespace reveal { namespace serialize {
 
+// -----------------------------------------------------------------------------
+//
 template<typename T, typename Tuple>
 class build_tuple : public default_visitor
 {
 public:
 
-	build_tuple(T& t, Tuple& tup)
-		: instance_(t)
-		, tup_(tup)
+	build_tuple(T& instance, Tuple tuple)
+		: instance_(instance)
+		, tuple_(tuple)
 	{}
 
 	template<typename Child, typename Parent>
 	auto member(char const*, Child Parent::*member)
-	{ 
-		return reveal::reflect_type<Child>(*this, _first_ver);
+	{
+		//auto children = std::tuple_cat(tuple_, std::tie(instance_.*member));
+		build_tuple<Child, std::tuple<>> build_child(s, std::tuple<>());
+		return reveal::reflect_type<Child>(build_child, _first_ver);
+		//return build_tuple<Parent, decltype(children)>(instance_, children);
+		//auto new_tup = 
+		//return build_tuple<Parent, std::tuple<>>(instance_.*member, std::tuple<>());
 	}
 
 	//template<typename SizeFun, typename InsertFun>
@@ -49,14 +56,18 @@ public:
 
 	auto primitive()
 	{
-		auto new_tup = std::tuple_cat(tup_, std::tie(instance_)); 
-		return build_tuple<T, decltype(new_tup)>(instance_, new_tup);
+		*this;
+	}
+
+	Tuple result()
+	{
+		return tuple_;
 	}
 
 private:
 
 	T& instance_;
-	Tuple& tup_;
+	Tuple tuple_;
 };
 
 }}

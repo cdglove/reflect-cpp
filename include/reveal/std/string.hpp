@@ -1,8 +1,8 @@
 // *****************************************************************************
 // 
-// reveal/std/vector.hpp
+// reveal/std/string.hpp
 //
-// Reflection of std::vector<>
+// Reflection of std::string
 //
 // Copyright Chris Glover 2016
 //
@@ -12,10 +12,10 @@
 //
 // ****************************************************************************
 #pragma once
-#ifndef REFLECT_STD_VECTOR_HPP_
-#define REFLECT_STD_VECTOR_HPP_
+#ifndef REFLECT_STD_STRING_HPP_
+#define REFLECT_STD_STRING_HPP_
 
-#include <vector>
+#include <string>
 #include "reveal/version.hpp"
 #include "reveal/tag.hpp"
 
@@ -23,15 +23,15 @@
 //
 namespace reveal {
 
-template<typename Visitor, typename T, typename Allocator>
-decltype(auto) reflect(Visitor& v, version_t, tag<std::vector<T, Allocator>>)
+template<typename Visitor, typename T, typename Traits, typename Allocator>
+decltype(auto) reflect(Visitor& v, version_t, tag<std::basic_string<T, Traits, Allocator>>)
 {
-	return v.container(
-		[](std::vector<T, Allocator> const& vec) { return vec.size(); },
-		[](std::vector<T, Allocator>& vec, T&& i) { return vec.push_back(std::forward<T>(i)); }
+	return v.string(
+		[](std::basic_string<T, Traits, Allocator> const& s) { return s.length(); },
+		[](std::basic_string<T, Traits, Allocator>& s, T&& i) { return s.push_back(std::forward<T>(i)); }
 	);
 }
 
 }
 
-#endif // REFLECT_STD_VECTOR_HPP_
+#endif // REFLECT_STD_STRING_HPP_

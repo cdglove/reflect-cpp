@@ -1,8 +1,8 @@
 // *****************************************************************************
 // 
-// reveal/std/vector.hpp
+// reveal/std/map.hpp
 //
-// Reflection of std::vector<>
+// Reflection of std::map
 //
 // Copyright Chris Glover 2016
 //
@@ -12,10 +12,11 @@
 //
 // ****************************************************************************
 #pragma once
-#ifndef REFLECT_STD_VECTOR_HPP_
-#define REFLECT_STD_VECTOR_HPP_
+#ifndef REFLECT_STD_MAP_HPP_
+#define REFLECT_STD_MAP_HPP_
 
-#include <vector>
+#include <map>
+#include "reveal/std/pair.hpp"
 #include "reveal/version.hpp"
 #include "reveal/tag.hpp"
 
@@ -23,15 +24,15 @@
 //
 namespace reveal {
 
-template<typename Visitor, typename T, typename Allocator>
-decltype(auto) reflect(Visitor& v, version_t, tag<std::vector<T, Allocator>>)
+template<typename Visitor, typename Key, typename T, typename Compare, typename Allocator>
+decltype(auto) reflect(Visitor& v, version_t, tag<std::map<Key, T, Compare, Allocator>>)
 {
 	return v.container(
-		[](std::vector<T, Allocator> const& vec) { return vec.size(); },
-		[](std::vector<T, Allocator>& vec, T&& i) { return vec.push_back(std::forward<T>(i)); }
+		[](std::map<Key, T, Compare, Allocator> const& s) { return s.size(); },
+		[](std::map<Key, T, Compare, Allocator>& s, std::pair<Key, T>&& i) { return s.insert(std::pair<Key, T>(i)); }
 	);
 }
 
 }
 
-#endif // REFLECT_STD_VECTOR_HPP_
+#endif // REFLECT_STD_MAP_HPP_

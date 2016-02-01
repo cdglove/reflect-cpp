@@ -23,9 +23,15 @@ namespace reveal {
 // -----------------------------------------------------------------------------
 // Reflect type. Called by visitors to issue a call to reflection.
 template<typename T, typename Visitor>
-auto reflect_type(Visitor& visitor, version_t version)
+decltype(auto) reflect_type(Visitor& visitor, version_t version)
 {
 	return reflect(visitor, version, tag<T>());
+}
+
+template<typename T, typename Visitor>
+decltype(auto) reflect_type(Visitor& visitor)
+{
+	return reflect(visitor, reveal::_first_ver, tag<T>());
 }
 
 // -----------------------------------------------------------------------------
@@ -42,23 +48,12 @@ public:
 	default_visitor& container(SizeFun, InsertFun)
 	{ return *this; }
 
+	template<typename SizeFun, typename InsertFun>
+	default_visitor& string(SizeFun s, InsertFun i)
+	{ return container(s, i); }
+
 	default_visitor& primitive()
 	{ return *this; }
-};
-
-// -----------------------------------------------------------------------------
-// 
-template<typename Visitor>
-class reflector
-{
-public:
-
-	template<typename T, typename... Ps>
-	auto operator()(tag<T>, Ps&... p)
-	{
-		Visitor visit(p...);
-		return reflect_type<T>(visit, reveal::_first_ver);
-	}
 };
 
 }

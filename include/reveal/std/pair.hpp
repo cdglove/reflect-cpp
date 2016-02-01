@@ -1,8 +1,8 @@
 // *****************************************************************************
 // 
-// reveal/version.hpp
+// reveal/std/map.hpp
 //
-// Strongly type version with enough space to hold 65000 versions
+// Reflection of std::pair
 //
 // Copyright Chris Glover 2016
 //
@@ -12,24 +12,26 @@
 //
 // ****************************************************************************
 #pragma once
-#ifndef REFLECT_VERSION_HPP_
-#define REFLECT_VERSION_HPP_
+#ifndef REFLECT_STD_PAIR_HPP_
+#define REFLECT_STD_PAIR_HPP_
 
-namespace reveal {
+#include <utility>
+#include "reveal/version.hpp"
+#include "reveal/tag.hpp"
 
 // -----------------------------------------------------------------------------
 //
-enum version_t
-{
-	_first_ver = 0,
-	_last_ver = 0xFFFF
-};
+namespace reveal {
 
-inline version_t ver(unsigned short v)
+template<typename Visitor, typename T1, typename T2>
+decltype(auto) reflect(Visitor& v, version_t, tag<std::pair<T1, T2>>)
 {
-	return version_t(v);
+	return v
+		.member("first", &std::pair<T1, T2>::first)
+		.member("second", &std::pair<T1, T2>::second)
+	;
 }
 
 }
 
-#endif // REFLECT_VERSION_HPP_
+#endif // REFLECT_STD_PAIR_HPP_

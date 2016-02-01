@@ -11,6 +11,8 @@
 // http://www.boost.org/LICENSE_1_0.txt
 //
 // ****************************************************************************
+#include "gtest/gtest.h"
+
 #include <sstream>
 #include <cassert>
 
@@ -19,7 +21,7 @@
 #include "reveal/serialize/simple_binary_reader.hpp"
 #include "test_user_types.hpp"
 
-int main()
+TEST(BinaryIO, Read_Write)
 {
 	ns::Parent1 obj;
 
@@ -48,11 +50,9 @@ int main()
 
 	binary_reader(obj);
 
-	assert(obj.f_.a_ == 1);
-	assert(obj.f_.b_ == 2);
-	assert(obj.s_.c_[0] == 3);
-	assert(obj.s_.c_[1] == 4);
-	assert(obj.s_.d_ == 5);
-	
-	return 0;
+	EXPECT_EQ(obj.f_.a_, 1);
+	EXPECT_EQ(obj.f_.b_, 2);
+	EXPECT_EQ(obj.s_.c_[0], 3);
+	EXPECT_EQ(obj.s_.c_[1], 4);
+	EXPECT_EQ(obj.s_.d_, 5);
 }

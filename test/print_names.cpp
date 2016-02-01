@@ -12,21 +12,20 @@
 // http://www.boost.org/LICENSE_1_0.txt
 //
 // ****************************************************************************
-#include <iostream>
+#include "gtest/gtest.h"
+
+#include <sstream>
 
 #include "reveal/reflect_type.hpp"
 #include "reveal/serialize/print_names.hpp"
 #include "test_user_types.hpp"
 
-int main()
+TEST(Visitor, PrintNames)
 {
 	ns::Parent1 obj;
 	
-	reveal::reflector<
-		reveal::serialize::print_names
-	> name_printer;
+	std::stringstream str;
+	reveal::serialize::print_names name_printer(str);
 
-	name_printer(reveal::tag<ns::Parent1>(), std::cout);
-	
-	return 0;
+	reveal::reflect_type<ns::Parent1>(name_printer);
 }
