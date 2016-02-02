@@ -1,6 +1,6 @@
 // *****************************************************************************
 // 
-// reveal/test/gtest_main.inl
+// reveal/test/gtest_main.cpp
 //
 // Common main function for out unit testing.
 //

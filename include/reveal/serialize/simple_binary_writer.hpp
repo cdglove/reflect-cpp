@@ -16,7 +16,6 @@
 #define REFLECT_SERIALIZE_SIMPLEBINARYWRITER_HPP_
 
 #include "reveal/reflect_type.hpp"
-#include "reveal/traits/function_traits.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -27,7 +26,7 @@ namespace reveal { namespace serialize {
 namespace detail
 {
 	template<typename T, typename Stream>
-	class simple_binary_writer_impl : public default_visitor
+	class simple_binary_writer_impl : public default_visitor<simple_binary_writer_impl<T, Stream>>
 	{
 	public:
 		simple_binary_writer_impl(T const& t, Stream& s)
@@ -49,12 +48,9 @@ namespace detail
 			auto num_elements = size(instance_);
 			stream_.write(reinterpret_cast<char const*>(&num_elements), sizeof(num_elements));
 
-			typedef std::decay_t<
-				typename function_traits<InsertFun>::template argument<1>::type
-			> value_type;
-
 			for(auto&& i : instance_)
 			{
+				typedef std::decay_t<decltype(i)> value_type;
 				simple_binary_writer_impl<value_type, Stream> write_child(i, stream_);
 				reflect_type<value_type>(write_child, _first_ver);
 			}
@@ -77,25 +73,15 @@ namespace detail
 
 // -----------------------------------------------------------------------------
 //
-template<typename Stream>
 class simple_binary_writer
 {
 public:
-
-	simple_binary_writer(Stream& stream)
-		: stream_(stream)
-	{}
-
-	template<typename T>
-	void operator()(T const& t)
+	template<typename T, typename Stream>
+	void operator()(T const& t, Stream& s)
 	{
-		detail::simple_binary_writer_impl<T, Stream> writer(t, stream_);
+		detail::simple_binary_writer_impl<T, Stream> writer(t, s);
 		reflect_type<T>(writer, _first_ver);
 	}
-
-private:
-
-	Stream& stream_;
 };
 
 }} // namespace reveal { namespace serialize {

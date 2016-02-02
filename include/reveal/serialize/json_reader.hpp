@@ -18,6 +18,9 @@
 #include "reveal/reflect_type.hpp"
 #include "reveal/traits/function_traits.hpp"
 
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
 // -----------------------------------------------------------------------------
 //
 namespace reveal { namespace serialize {
@@ -26,38 +29,39 @@ namespace reveal { namespace serialize {
 //
 namespace detail
 {
-	template<typename T, typename Stream>
-	class json_reader_impl  : public default_visitor
+	template<typename T>
+	class json_reader_impl  : public default_visitor<json_reader_impl<T>>
 	{
 	public:
-		json_reader_impl(T& t, Stream& s)
+		json_reader_impl(T& t, boost::property_tree::ptree& node)
 			: instance_(t)
-			, stream_(s)
+			, node_(node)
 		{}
 
 		template<typename Child, typename Parent>
-		json_reader_impl<T, Stream>& member(char const* name, Child Parent::*member)
+		json_reader_impl<T>& member(char const* name, Child Parent::*member)
 		{
-	 		json_reader_impl<Child, Stream> read_child(instance_.*member, stream_);
-			reflect_type<Child>(read_child, _first_ver);
+			boost::optional<boost::property_tree::ptree&> child = node_.get_child_optional(name);
+			if(child)
+			{
+	 			json_reader_impl<Child> read_child(instance_.*member, *child);
+				reflect_type<Child>(read_child, _first_ver);
+			}
 			return *this;
 		}
 
 		template<typename SizeFun, typename InsertFun>
-		json_reader_impl<T, Stream>& container(SizeFun size, InsertFun insert)
+		json_reader_impl<T>& container(SizeFun size, InsertFun insert)
 		{
-			auto num_elements = size(instance_);
-			stream_.read(reinterpret_cast<char*>(&num_elements), sizeof(num_elements));
-
 			typedef std::decay_t<
 				typename function_traits<InsertFun>::template argument<1>::type
 			> value_type;
 
-			for(std::size_t i = 0; i < num_elements; ++i)
+			for(auto&& element : node_)
 			{
-				//cglover-todo: remove the requirement for default constructibility.
+				// cglover-todo: remove the requirement for default constructibility.
 				value_type value;
-				json_reader_impl<value_type, Stream> read_child(value, stream_);
+				json_reader_impl<value_type> read_child(value, element.second);
 				reflect_type<value_type>(read_child, _first_ver);
 				insert(instance_, std::move(value));
 			}
@@ -65,16 +69,26 @@ namespace detail
 			return *this;
 		}
 
-		json_reader_impl<T, Stream>& primitive()
+		template<typename SizeFun, typename InsertFun>
+		json_reader_impl<T>& string(SizeFun, InsertFun)
 		{
-			stream_.read(reinterpret_cast<char*>(&instance_), sizeof(instance_));
+			return primitive();
+		}
+
+		json_reader_impl<T>& primitive()
+		{
+			boost::optional<T> value = node_.get_value_optional<T>();
+			if(value)
+			{
+				instance_ = *value;
+			}
 			return *this;
 		}
 
 	private:
 
 		T& instance_;
-		Stream& stream_;
+		boost::property_tree::ptree& node_;
 	};
 	}
 
@@ -87,7 +101,9 @@ public:
 	template<typename T, typename Stream>
 	void operator()(T& t, Stream& s)
 	{
-		detail::json_reader_impl<T, Stream> reader(t, s);
+		boost::property_tree::ptree tree;
+		boost::property_tree::read_json(s, tree);
+		detail::json_reader_impl<T> reader(t, tree);
 		reflect_type<T>(reader, _first_ver);
 	}
 };

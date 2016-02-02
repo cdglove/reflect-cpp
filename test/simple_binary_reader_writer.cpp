@@ -33,22 +33,18 @@ TEST(BinaryIO, Read_Write)
 	
 	std::stringstream archive;
 
-	reveal::serialize::simple_binary_writer<
-		std::stringstream
-	> binary_writer(archive);
+	reveal::serialize::simple_binary_writer binary_writer;
 
-	binary_writer(obj);
+	binary_writer(obj, archive);
 
 	obj.f_.a_ = 0;
 	obj.f_.b_ = 0;
 	obj.s_.c_.clear();
 	obj.s_.d_ = 0;
 
-	reveal::serialize::simple_binary_reader<
-		std::stringstream
-	> binary_reader(archive);
+	reveal::serialize::simple_binary_reader binary_reader;
 
-	binary_reader(obj);
+	binary_reader(obj, archive);
 
 	EXPECT_EQ(obj.f_.a_, 1);
 	EXPECT_EQ(obj.f_.b_, 2);

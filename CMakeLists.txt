@@ -22,6 +22,7 @@ project (reveal-cpp)
 #
 ###############################################################################
 option( REFLECT_BUILD_TESTS "Build the reveal-cpp project tests." ON)
+option( REFLECT_BUILD_BENCHMARKS "Build the reveal-cpp project benchmarks." ON)
 option( REFLECT_BUILD_DOCS  "Allow build the reveal-cppREFLECT project docs." ON)
 
 ###############################################################################
@@ -52,10 +53,10 @@ set(CMAKE_CXX_STANDARD 14)
 
 ###############################################################################
 #
-# Configure packages
+# Find Boost
 #
 ###############################################################################
-include(contrib/cmaketools/external_git.cmake)
+find_package( Boost REQUIRED )
 
 ###############################################################################
 #
@@ -81,6 +82,7 @@ file(GLOB_RECURSE PROJECT_HEADERS include/*.hpp)
 add_library(reveal-cpp INTERFACE)
 target_sources(reveal-cpp INTERFACE ${PROJECT_HEADERS})
 target_include_directories(reveal-cpp INTERFACE "include/")
+target_include_directories(reveal-cpp SYSTEM INTERFACE ${Boost_INCLUDE_DIRS})
 
 ###############################################################################
 #
@@ -109,6 +111,32 @@ if(REFLECT_BUILD_TESTS)
   add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
 
 	add_subdirectory(test)
+endif()
+
+###############################################################################
+#
+# See if w'ere testing.
+#
+###############################################################################
+if(REFLECT_BUILD_BENCHMARKS)
+  enable_testing()
+
+  #############################################################################
+  #
+  # Add google test
+  #
+  #############################################################################
+  include(contrib/cmaketools/DownloadProject.cmake)
+  download_project(
+    PROJ                googlebenchmark
+    GIT_REPOSITORY      https://github.com/google/benchmark.git
+    GIT_TAG             master
+  )
+
+  set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+  add_subdirectory(${googlebenchmark_SOURCE_DIR} ${googlebenchmark_BINARY_DIR})
+
+  add_subdirectory(benchmark)
 endif()
 
 # no docs at the moment

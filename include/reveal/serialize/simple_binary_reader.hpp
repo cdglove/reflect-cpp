@@ -27,7 +27,7 @@ namespace reveal { namespace serialize {
 namespace detail
 {
 	template<typename T, typename Stream>
-	class simple_binary_reader_impl  : public default_visitor
+	class simple_binary_reader_impl  : public default_visitor<simple_binary_reader_impl<T, Stream>>
 	{
 	public:
 		simple_binary_reader_impl(T& t, Stream& s)
@@ -80,25 +80,16 @@ namespace detail
 
 // -----------------------------------------------------------------------------
 //
-template<typename Stream>
 class simple_binary_reader
 {
 public:
 
-	simple_binary_reader(Stream& stream)
-		: stream_(stream)
-	{}
-
-	template<typename T>
-	void operator()(T& t)
+	template<typename T, typename Stream>
+	void operator()(T& t, Stream& s)
 	{
-		detail::simple_binary_reader_impl<T, Stream> reader(t, stream_);
+		detail::simple_binary_reader_impl<T, Stream> reader(t, s);
 		reflect_type<T>(reader, _first_ver);
 	}
-
-private:
-
-	Stream& stream_;
 };
 
 }} // namespace reveal { namespace serialize {

@@ -16,8 +16,6 @@
 #define REFLECT_SERIALIZE_JSONWRITER_HPP_
 
 #include "reveal/reflect_type.hpp"
-#include "reveal/primitives.hpp"
-#include "reveal/traits/function_traits.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -28,7 +26,7 @@ namespace reveal { namespace serialize {
 namespace detail
 {
 	template<typename T, typename Stream>
-	class json_writer_impl : public default_visitor
+	class json_writer_impl : public default_visitor<json_writer_impl<T, Stream>>
 	{
 	public:
 		json_writer_impl(T const& t, Stream& s, int indent)
@@ -72,22 +70,22 @@ namespace detail
 
 			stream_ << '"' << name << '"' << ": ";
 
-	 		json_writer_impl<Child, Stream> write_child(instance_.*member, stream_, indent_);
-			reflect_type<Child>(write_child, _first_ver);
+	 		json_writer_impl<const Child, Stream> write_child(instance_.*member, stream_, indent_);
+			reflect_type<const Child>(write_child, _first_ver);
 			return *this;
 		}
 
 		template<typename SizeFun, typename InsertFun>
-		json_writer_impl<T, Stream>& container(SizeFun size, InsertFun insert)
+		json_writer_impl<T, Stream>& container(SizeFun, InsertFun)
 		{
 			stream_ << '[';
 
-			typedef std::decay_t<
-				typename function_traits<InsertFun>::template argument<1>::type
-			> value_type;
-
 			auto begin = std::begin(instance_);
 			auto end = std::end(instance_);
+
+			typedef std::decay_t<
+				decltype(*begin)
+			> value_type;
 
 			if(begin != end)
 			{

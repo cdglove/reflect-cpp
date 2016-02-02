@@ -29,7 +29,7 @@ decltype(auto) reflect(Visitor& v, version_t, tag<std::map<Key, T, Compare, Allo
 {
 	return v.container(
 		[](std::map<Key, T, Compare, Allocator> const& s) { return s.size(); },
-		[](std::map<Key, T, Compare, Allocator>& s, std::pair<Key, T>&& i) { return s.insert(std::pair<Key, T>(i)); }
+		[](std::map<Key, T, Compare, Allocator>& s, std::pair<Key, T>&& i) { return s.insert(std::forward<std::pair<Key, T>>(i)); }
 	);
 }
 

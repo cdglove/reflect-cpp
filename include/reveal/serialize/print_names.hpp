@@ -22,7 +22,7 @@
 
 namespace reveal { namespace serialize {
 
-class print_names : public default_visitor
+class print_names : public default_visitor<print_names>
 {
 public:
 
