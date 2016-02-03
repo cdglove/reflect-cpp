@@ -12,8 +12,8 @@
 //
 // ****************************************************************************
 #pragma once 
-#ifndef REFLECT_SERIALIZE_SIMPLEBINARYWRITER_HPP_
-#define REFLECT_SERIALIZE_SIMPLEBINARYWRITER_HPP_
+#ifndef REVEAL_SERIALIZE_SIMPLEBINARYWRITER_HPP_
+#define REVEAL_SERIALIZE_SIMPLEBINARYWRITER_HPP_
 
 #include "reveal/reflect_type.hpp"
 
@@ -86,4 +86,4 @@ public:
 
 }} // namespace reveal { namespace serialize {
 
-#endif // REFLECT_SERIALIZE_SIMPLEBINARYWRITER_HPP_
+#endif // REVEAL_SERIALIZE_SIMPLEBINARYWRITER_HPP_

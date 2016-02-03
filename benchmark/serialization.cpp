@@ -31,6 +31,9 @@
 
 struct primitives
 {
+	primitives()
+	{}
+
 	char c;
 	short s;
 	int i;
@@ -52,6 +55,37 @@ decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<primitives>)
 	;
 }
 
+struct primitives_blob
+{
+	primitives_blob()
+	{}
+
+	char c;
+	short s;
+	int i;
+	float f;
+	double d;
+	std::size_t p;
+};
+
+template<typename Visitor>
+decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<primitives_blob>)
+{
+	return v.primitive();
+}
+
+struct memory_stream_buf
+{
+	char* gptr()
+	{
+		return &*get_;
+	}
+
+	typedef std::vector<char> buffer_t;
+	buffer_t buffer_;
+	buffer_t::iterator get_;
+};
+
 struct memory_stream
 {
 	void read(char* dest, std::size_t count)
@@ -63,8 +97,8 @@ struct memory_stream
 		//case 4: read_impl_4(dest); break;
 		//case 8: read_impl_8(dest); break;
 		//default:
-			auto first = get_;
-			get_ += count;
+			auto first = buffer_.get_;
+			buffer_.get_ += count;
 			//std::copy(first, get_, dest);
 			std::memcpy(dest, &*first, count);
 		};
@@ -73,55 +107,27 @@ struct memory_stream
 
 	void write(char const* src, std::size_t count)
 	{
-		std::copy(src, src + count, std::back_inserter(buffer_));
+		std::copy(src, src + count, std::back_inserter(buffer_.buffer_));
 	}
 
 	void seekg(std::size_t off)
 	{
-		get_ = buffer_.begin() + off;
+		buffer_.get_ = buffer_.buffer_.begin() + off;
 	}
 
-	typedef std::vector<char> buffer_t;
-	buffer_t buffer_;
-	buffer_t::iterator get_;
+	std::size_t tellg()
+	{
+		return buffer_.get_ - buffer_.buffer_.begin();
+	}
+
+	memory_stream_buf* rdbuf()
+	{
+		return &buffer_;
+	}
 
 private:
 
-	void read_impl_1(char* dest)
-	{
-		*dest = *get_;
-		++get_;
-	}
-
-	void read_impl_2(char* dest)
-	{
-		auto first = get_;
-		get_ += 2;
-		typedef std::uint16_t type;
-		type* src_ = reinterpret_cast<type*>(&*first);
-		type* dest_ = reinterpret_cast<type*>(dest);
-		*dest_ = *src_;
-	}
-
-	void read_impl_4(char* dest)
-	{
-		auto first = get_;
-		get_ += 4;
-		typedef std::uint32_t type;
-		type* src_ = reinterpret_cast<type*>(&*first);
-		type* dest_ = reinterpret_cast<type*>(dest);
-		*dest_ = *src_;
-	}
-	
-	void read_impl_8(char* dest)
-	{
-		auto first = get_;
-		get_ += 8;
-		typedef std::uint64_t type;
-		type* src_ = reinterpret_cast<type*>(&*first);
-		type* dest_ = reinterpret_cast<type*>(dest);
-		*dest_ = *src_;
-	}
+	memory_stream_buf buffer_;
 };
 
 //struct memory_stream2
@@ -231,6 +237,25 @@ static void BM_BinaryRead(benchmark::State& state)
 }
 BENCHMARK_TEST(BM_BinaryRead);
 
+static void BM_BinaryReadBlob(benchmark::State& state) 
+{
+	std::vector<primitives_blob> obj(state.range_x());
+	memory_stream archive;
+	reveal::serialize::simple_binary_writer binary_writer;
+	binary_writer(obj, archive);
+
+	reveal::serialize::simple_binary_reader binary_reader;
+
+	while (state.KeepRunning())
+	{
+		obj.clear();
+		archive.seekg(0);
+		binary_reader(obj, archive);
+		benchmark::DoNotOptimize(obj);
+	}
+}
+BENCHMARK_TEST(BM_BinaryReadBlob);
+
 //static void BM_BinaryRead2(benchmark::State& state) 
 //{
 //	std::vector<primitives> obj(state.range_x());
@@ -319,3 +344,24 @@ static void BM_BinaryReadFile(benchmark::State& state)
 	}
 }
 BENCHMARK_TEST(BM_BinaryReadFile);
+
+static void BM_BinaryReadFileBlob(benchmark::State& state) 
+{
+	std::vector<primitives_blob> obj(state.range_x());
+	std::ofstream archive_out(open_file("test.bin", "w"));
+	reveal::serialize::simple_binary_writer binary_writer;
+	binary_writer(obj, archive_out);
+	archive_out.close();
+
+	reveal::serialize::simple_binary_reader binary_reader;
+
+	while (state.KeepRunning())
+	{
+		std::ifstream archive_in(open_file("test.bin", "r"));
+		obj.clear();
+		binary_reader(obj, archive_in);
+		benchmark::DoNotOptimize(obj);
+		archive_in.close();
+	}
+}
+BENCHMARK_TEST(BM_BinaryReadFileBlob);

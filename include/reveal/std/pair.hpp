@@ -12,8 +12,8 @@
 //
 // ****************************************************************************
 #pragma once
-#ifndef REFLECT_STD_PAIR_HPP_
-#define REFLECT_STD_PAIR_HPP_
+#ifndef REVEAL_STD_PAIR_HPP_
+#define REVEAL_STD_PAIR_HPP_
 
 #include <utility>
 #include "reveal/version.hpp"
@@ -34,4 +34,4 @@ decltype(auto) reflect(Visitor& v, version_t, tag<std::pair<T1, T2>>)
 
 }
 
-#endif // REFLECT_STD_PAIR_HPP_
+#endif // REVEAL_STD_PAIR_HPP_

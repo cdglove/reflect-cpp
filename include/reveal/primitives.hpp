@@ -12,8 +12,8 @@
 //
 // ****************************************************************************
 #pragma once
-#ifndef  reflect_PRIMITIVES_HPP_
-#define  reflect_PRIMITIVES_HPP_
+#ifndef REVEAL_PRIMITIVES_HPP_
+#define REVEAL_PRIMITIVES_HPP_
 
 #include "reveal/version.hpp"
 

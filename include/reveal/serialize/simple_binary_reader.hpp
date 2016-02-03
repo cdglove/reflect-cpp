@@ -12,10 +12,11 @@
 //
 // ****************************************************************************
 #pragma once 
-#ifndef REFLECT_SERIALIZE_SIMPLEBINARYREADER_HPP_
-#define REFLECT_SERIALIZE_SIMPLEBINARYREADER_HPP_
+#ifndef REVEAL_SERIALIZE_SIMPLEBINARYREADER_HPP_
+#define REVEAL_SERIALIZE_SIMPLEBINARYREADER_HPP_
 
 #include "reveal/reflect_type.hpp"
+#include "reveal/reflection_type.hpp"
 #include "reveal/traits/function_traits.hpp"
 
 // -----------------------------------------------------------------------------
@@ -53,13 +54,29 @@ namespace detail
 				typename function_traits<InsertFun>::template argument<1>::type
 			> value_type;
 
-			for(std::size_t i = 0; i < num_elements; ++i)
+			// Detect if we need to reflect each type or can do it in bulk.
+			reflection_type detector;
+			reflect_type<value_type>(detector, _first_ver);
+			if(detector.is_pod() /* && container is contiguous */)
 			{
-				//cglover-todo: remove the requirement for default constructibility.
-				value_type value;
-				simple_binary_reader_impl<value_type, Stream> read_child(value, stream_);
-				reflect_type<value_type>(read_child, _first_ver);
-				insert(instance_, std::move(value));
+				//value_type* raw_data = reinterpret_cast<value_type*>(stream_.rdbuf()->gptr());
+				//stream_.seekg(stream_.tellg() + num_elements * sizeof(value_type));
+				//instance_.insert(raw_data, raw_data + num_elements);
+				instance_.reserve(instance_.size() + num_elements);
+				auto first = instance_.end();
+				instance_.resize(instance_.size() + num_elements);
+				stream_.read(reinterpret_cast<char*>(&*first), num_elements * sizeof(value_type));
+			}
+			else
+			{
+				for(std::size_t i = 0; i < num_elements; ++i)
+				{
+					//cglover-todo: remove the requirement for default constructibility.
+					value_type value;
+					simple_binary_reader_impl<value_type, Stream> read_child(value, stream_);
+					reflect_type<value_type>(read_child, _first_ver);
+					insert(instance_, std::move(value));
+				}
 			}
 
 			return *this;
@@ -94,4 +111,4 @@ public:
 
 }} // namespace reveal { namespace serialize {
 	
-#endif // REFLECT_SERIALIZE_SIMPLEBINARYREADER_HPP_
+#endif // REVEAL_SERIALIZE_SIMPLEBINARYREADER_HPP_

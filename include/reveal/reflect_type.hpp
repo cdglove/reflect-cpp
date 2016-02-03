@@ -13,8 +13,8 @@
 //
 // ****************************************************************************
 #pragma once
-#ifndef REFLECT_REFLECTTYPE_HPP_
-#define REFLECT_REFLECTTYPE_HPP_
+#ifndef REVEAL_REFLECTTYPE_HPP_
+#define REVEAL_REFLECTTYPE_HPP_
 
 #include "reveal/reflect.hpp"
 
@@ -59,4 +59,4 @@ public:
 
 }
 
-#endif // REFLECT_REFLECTTYPE_HPP_
+#endif // REVEAL_REFLECTTYPE_HPP_

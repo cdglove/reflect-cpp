@@ -12,8 +12,8 @@
 //
 // ****************************************************************************
 #pragma once
-#ifndef REFLECT_TAG_HPP_
-#define REFLECT_TAG_HPP_
+#ifndef REVEAL_TAG_HPP_
+#define REVEAL_TAG_HPP_
 
 namespace reveal {
 
@@ -27,4 +27,4 @@ struct tag
 
 }
 
-#endif // REFLECT_TAG_HPP_
+#endif // REVEAL_TAG_HPP_

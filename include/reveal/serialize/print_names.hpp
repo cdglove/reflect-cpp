@@ -12,8 +12,8 @@
 //
 // ****************************************************************************
 #pragma once 
-#ifndef REFLECT_SERIALIZE_PRINTNAMES_HPP_
-#define REFLECT_SERIALIZE_PRINTNAMES_HPP_
+#ifndef REVEAL_SERIALIZE_PRINTNAMES_HPP_
+#define REVEAL_SERIALIZE_PRINTNAMES_HPP_
 
 #include <ostream>
 #include <iterator>
@@ -58,4 +58,4 @@ private:
 
 }}
 
-#endif // REFLECT_SERIALIZE_PRINTNAMES_HPP_
+#endif // REVEAL_SERIALIZE_PRINTNAMES_HPP_

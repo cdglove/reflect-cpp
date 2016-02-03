@@ -12,8 +12,8 @@
 //
 // ****************************************************************************
 #pragma once
-#ifndef REFLECT_REFLECT_HPP_
-#define REFLECT_REFLECT_HPP_
+#ifndef REVEAL_REFLECT_HPP_
+#define REVEAL_REFLECT_HPP_
 
 #include "reveal/version.hpp"
 #include "reveal/tag.hpp"
@@ -40,4 +40,4 @@ void reflect(Visitor& v, version_t, tag<T>)
 
 }
 
-#endif // REFLECT_REFLECT_HPP_
+#endif // REVEAL_REFLECT_HPP_

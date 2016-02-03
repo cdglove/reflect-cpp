@@ -12,8 +12,8 @@
 //
 // ****************************************************************************
 #pragma once 
-#ifndef REFLECT_SERIALIZE_BUILDTUPLE_HPP_
-#define REFLECT_SERIALIZE_BUILDTUPLE_HPP_
+#ifndef REVEAL_SERIALIZE_BUILDTUPLE_HPP_
+#define REVEAL_SERIALIZE_BUILDTUPLE_HPP_
 
 #include <tuple>
 #include "reveal/reflect_type.hpp"
@@ -71,4 +71,4 @@ private:
 };
 
 }}
-#endif // REFLECT_SERIALIZE_BUILDTUPLE_HPP_
+#endif // REVEAL_SERIALIZE_BUILDTUPLE_HPP_

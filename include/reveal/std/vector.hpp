@@ -12,8 +12,8 @@
 //
 // ****************************************************************************
 #pragma once
-#ifndef REFLECT_STD_VECTOR_HPP_
-#define REFLECT_STD_VECTOR_HPP_
+#ifndef REVEAL_STD_VECTOR_HPP_
+#define REVEAL_STD_VECTOR_HPP_
 
 #include <vector>
 #include "reveal/version.hpp"
@@ -34,4 +34,4 @@ decltype(auto) reflect(Visitor& v, version_t, tag<std::vector<T, Allocator>>)
 
 }
 
-#endif // REFLECT_STD_VECTOR_HPP_
+#endif // REVEAL_STD_VECTOR_HPP_

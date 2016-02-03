@@ -12,8 +12,8 @@
 //
 // ****************************************************************************
 #pragma once
-#ifndef REFLECT_STD_MAP_HPP_
-#define REFLECT_STD_MAP_HPP_
+#ifndef REVEAL_STD_MAP_HPP_
+#define REVEAL_STD_MAP_HPP_
 
 #include <map>
 #include "reveal/std/pair.hpp"
@@ -35,4 +35,4 @@ decltype(auto) reflect(Visitor& v, version_t, tag<std::map<Key, T, Compare, Allo
 
 }
 
-#endif // REFLECT_STD_MAP_HPP_
+#endif // REVEAL_STD_MAP_HPP_

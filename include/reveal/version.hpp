@@ -12,8 +12,8 @@
 //
 // ****************************************************************************
 #pragma once
-#ifndef REFLECT_VERSION_HPP_
-#define REFLECT_VERSION_HPP_
+#ifndef REVEAL_VERSION_HPP_
+#define REVEAL_VERSION_HPP_
 
 namespace reveal {
 
@@ -32,4 +32,4 @@ inline version_t ver(unsigned short v)
 
 }
 
-#endif // REFLECT_VERSION_HPP_
+#endif // REVEAL_VERSION_HPP_

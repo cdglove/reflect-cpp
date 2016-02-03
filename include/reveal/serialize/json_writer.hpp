@@ -12,8 +12,8 @@
 //
 // ****************************************************************************
 #pragma once 
-#ifndef REFLECT_SERIALIZE_JSONWRITER_HPP_
-#define REFLECT_SERIALIZE_JSONWRITER_HPP_
+#ifndef REVEAL_SERIALIZE_JSONWRITER_HPP_
+#define REVEAL_SERIALIZE_JSONWRITER_HPP_
 
 #include "reveal/reflect_type.hpp"
 
@@ -26,7 +26,7 @@ namespace reveal { namespace serialize {
 namespace detail
 {
 	template<typename T, typename Stream>
-	class json_writer_impl : public default_visitor<json_writer_impl<T, Stream>>
+	class json_writer_impl
 	{
 	public:
 		json_writer_impl(T const& t, Stream& s, int indent)
@@ -151,4 +151,4 @@ public:
 
 }} // namespace reveal { namespace serialize {
 
-#endif // REFLECT_SERIALIZE_JSONWRITER_HPP_
+#endif // REVEAL_SERIALIZE_JSONWRITER_HPP_

@@ -12,8 +12,8 @@
 //
 // ****************************************************************************
 #pragma once 
-#ifndef REFLECT_SERIALIZE_JSONREADER_HPP_
-#define REFLECT_SERIALIZE_JSONREADER_HPP_
+#ifndef REVEAL_SERIALIZE_JSONREADER_HPP_
+#define REVEAL_SERIALIZE_JSONREADER_HPP_
 
 #include "reveal/reflect_type.hpp"
 #include "reveal/traits/function_traits.hpp"
@@ -30,7 +30,7 @@ namespace reveal { namespace serialize {
 namespace detail
 {
 	template<typename T>
-	class json_reader_impl  : public default_visitor<json_reader_impl<T>>
+	class json_reader_impl
 	{
 	public:
 		json_reader_impl(T& t, boost::property_tree::ptree& node)
@@ -110,4 +110,4 @@ public:
 
 }} // namespace reveal { namespace serialize {
 	
-#endif // REFLECT_SERIALIZE_JSONREADER_HPP_
+#endif // REVEAL_SERIALIZE_JSONREADER_HPP_
