@@ -58,10 +58,15 @@ namespace detail
 			return *this;
 		}
 
-		simple_binary_writer_impl<T, Stream>& primitive()
+		simple_binary_writer_impl<T, Stream>& pod()
 		{
 			stream_.write(reinterpret_cast<char const*>(&instance_), sizeof(instance_));
 			return *this;
+		}
+
+		simple_binary_writer_impl<T, Stream>& primitive()
+		{
+			return pod();
 		}
 
 	private:

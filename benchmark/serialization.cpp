@@ -71,7 +71,7 @@ struct primitives_blob
 template<typename Visitor>
 decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<primitives_blob>)
 {
-	return v.primitive();
+	return v.pod();
 }
 
 struct memory_stream_buf

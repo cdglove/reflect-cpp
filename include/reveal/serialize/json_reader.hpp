@@ -17,9 +17,11 @@
 
 #include "reveal/reflect_type.hpp"
 #include "reveal/traits/function_traits.hpp"
-
+#include "reveal/utility/base64.hpp"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <string>
+#include <iostream>
 
 // -----------------------------------------------------------------------------
 //
@@ -73,6 +75,16 @@ namespace detail
 		json_reader_impl<T>& string(SizeFun, InsertFun)
 		{
 			return primitive();
+		}
+
+		json_reader_impl<T>& pod()
+		{
+			boost::optional<std::string> encoded = node_.get_value_optional<std::string>();
+			if(encoded)
+			{
+				utility::base64_decode(encoded->begin(), encoded->end(), reinterpret_cast<char*>(&instance_));
+			}
+			return *this;
 		}
 
 		json_reader_impl<T>& primitive()

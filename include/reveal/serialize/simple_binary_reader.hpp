@@ -82,10 +82,15 @@ namespace detail
 			return *this;
 		}
 
-		simple_binary_reader_impl<T, Stream>& primitive()
+		simple_binary_reader_impl<T, Stream>& pod()
 		{
 			stream_.read(reinterpret_cast<char*>(&instance_), sizeof(instance_));
 			return *this;
+		}
+
+		simple_binary_reader_impl<T, Stream>& primitive()
+		{
+			return pod();
 		}
 
 	private:

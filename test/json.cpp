@@ -30,6 +30,7 @@ public:
 	char const* struct_json = "{\n  \"integer\": 10,\n  \"real\": 5,\n  \"string\": \"Hello World!\"\n}";
 	char const* nested_struct_json = "{\n  \"f\": 1,\n  \"v\": {\n    \"integer\": 10,\n    \"real\": 5,\n    \"string\": \"Hello World!\"\n  },\n  \"i\": 2\n}";
 	char const* container_json = "{\n  \"v\": [0, 1],\n  \"m\": [{\n    \"first\": 1,\n    \"second\": 10\n  }, {\n    \"first\": 2,\n    \"second\": 20\n  }]\n}";
+	char const* pod_json = "\"iRMAAA\"";
 };
 
 // -----------------------------------------------------------------------------
@@ -85,6 +86,19 @@ decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<container>)
 		.member("v", &container::v)
 		.member("m", &container::m)
 	;
+}
+
+// -----------------------------------------------------------------------------
+//
+struct pod
+{
+	int data;
+};
+
+template<typename Visitor>
+decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<pod>)
+{
+	return v.pod();
 }
 
 // -----------------------------------------------------------------------------
@@ -145,7 +159,6 @@ TEST_F(Json, ReadNestedStruct)
 
 // -----------------------------------------------------------------------------
 //
-volatile reveal::serialize::json_writer* p = nullptr;
 TEST_F(Json, WriteContainer)
 {
 	container c;
@@ -156,7 +169,6 @@ TEST_F(Json, WriteContainer)
 	c.m.insert(std::make_pair(2, 20.f));
 	std::stringstream str;
     reveal::serialize::json_writer writer;
-    p = &writer;
 	writer(c, str);
 	EXPECT_EQ(str.str(), container_json);
 }
@@ -174,4 +186,25 @@ TEST_F(Json, ReadContainer)
 	EXPECT_EQ(c.m.size(), 2);
 	EXPECT_EQ(c.m.at(1), 10.f);
 	EXPECT_EQ(c.m.at(2), 20.f);
+}
+
+// -----------------------------------------------------------------------------
+//
+TEST_F(Json, WritePod)
+{
+	pod p;
+	p.data = 5001;
+	std::stringstream str;
+    reveal::serialize::json_writer writer;
+	writer(p, str);
+	EXPECT_EQ(str.str(), pod_json);
+}
+
+TEST_F(Json, ReadPod)
+{
+	pod p;
+	std::stringstream str(pod_json);
+	reveal::serialize::json_reader reader;
+	reader(p, str);
+	EXPECT_EQ(5001, p.data);
 }

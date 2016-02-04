@@ -53,6 +53,9 @@ public:
 	Derived& string(SizeFun s, InsertFun i)
 	{ return static_cast<Derived*>(this)->container(s, i); }
 
+	Derived& pod()
+	{ return *static_cast<Derived*>(this); }
+
 	Derived& primitive()
 	{ return *static_cast<Derived*>(this); }
 };

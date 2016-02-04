@@ -21,7 +21,7 @@ namespace reveal {
 
 // -----------------------------------------------------------------------------
 
-class reflection_type : default_visitor<reflection_type>
+class reflection_type : public default_visitor<reflection_type>
 {
 public:
 
@@ -50,9 +50,15 @@ public:
 		return *this;
 	}
 
-	reflection_type& primitive()
+	reflection_type& pod()
 	{
 		flags_ |= F_POD;
+		return *this;
+	}
+
+	reflection_type& primitive()
+	{
+		flags_ |= F_PRIMITIVE;
 		return *this;
 	}
 
@@ -66,15 +72,20 @@ public:
 		return flags_ == F_CONTAINER;
 	}
 
-	bool isstring()
+	bool is_string()
 	{
 		return flags_ == F_STRING;
 	}
 
 	bool is_pod()
 	{
-		return flags_ == F_POD;
+		return flags_ == F_POD || flags_ == F_PRIMITIVE;
 	}
+
+	bool is_primitive()
+	{
+		return flags_ == F_PRIMITIVE;
+	}	
 
 private:
 
@@ -85,6 +96,7 @@ private:
 		F_CONTAINER		= 1 << 1,
 		F_STRING		= 1 << 2,
 		F_POD			= 1 << 3,
+		F_PRIMITIVE		= 1 << 4,
 	};
 
 	unsigned int flags_;
