@@ -30,7 +30,7 @@ struct make_lazy { static const bool value = false; };
 // function for type T is missing. Make sure it's implemented and correctly 
 // included.
 template<typename Visitor, typename T>
-void reflect(Visitor& v, version_t, tag<T>)
+constexpr void reflect(Visitor& v, version_t, tag<T>)
 {
 	// cglovert-todo: Consider that instead of static assert, we could
 	// call T::reflect(v), which would allow users to specify their reflect

@@ -27,7 +27,7 @@ namespace ns
 	};
 
 	template<typename Visitor>
-	auto reflect(Visitor& v, reveal::version_t, reveal::tag<Child1>)
+	decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<Child1>)
 	{
 		return v
 			.member("a_", &Child1::a_)
@@ -42,7 +42,7 @@ namespace ns
 	};
 
 	template<typename Visitor>
-	auto reflect(Visitor& v, reveal::version_t, reveal::tag<Child2>)
+	decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<Child2>)
 	{
 		return v
 			.member("c_", &Child2::c_)
@@ -57,7 +57,7 @@ namespace ns
 	};
 
 	template<typename Visitor>
-	auto reflect(Visitor& v, reveal::version_t, reveal::tag<Parent1>)
+	decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<Parent1>)
 	{
 		return v
 			.member("f_", &Parent1::f_)

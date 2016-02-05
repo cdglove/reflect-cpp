@@ -43,7 +43,7 @@ struct values
 };
 
 template<typename Visitor>
-decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<values>)
+constexpr decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<values>)
 {
 	return v
 		.member("integer", &values::integer)
@@ -62,7 +62,7 @@ struct nested_values
 };
 
 template<typename Visitor>
-decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<nested_values>)
+constexpr decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<nested_values>)
 {
 	return v
 		.member("f", &nested_values::f)
@@ -80,7 +80,7 @@ struct container
 };
 
 template<typename Visitor>
-decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<container>)
+constexpr decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<container>)
 {
 	return v
 		.member("v", &container::v)
@@ -96,7 +96,7 @@ struct pod
 };
 
 template<typename Visitor>
-decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<pod>)
+constexpr decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<pod>)
 {
 	return v.pod();
 }

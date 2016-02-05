@@ -25,7 +25,7 @@
 namespace reveal {
 
 template<typename Visitor, typename Key, typename T, typename Compare, typename Allocator>
-decltype(auto) reflect(Visitor& v, version_t, tag<std::map<Key, T, Compare, Allocator>>)
+constexpr decltype(auto) reflect(Visitor& v, version_t, tag<std::map<Key, T, Compare, Allocator>>)
 {
 	return v.container(
 		[](std::map<Key, T, Compare, Allocator> const& s) { return s.size(); },

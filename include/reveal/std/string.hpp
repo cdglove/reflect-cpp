@@ -24,7 +24,7 @@
 namespace reveal {
 
 template<typename Visitor, typename T, typename Traits, typename Allocator>
-decltype(auto) reflect(Visitor& v, version_t, tag<std::basic_string<T, Traits, Allocator>>)
+constexpr decltype(auto) reflect(Visitor& v, version_t, tag<std::basic_string<T, Traits, Allocator>>)
 {
 	return v.string(
 		[](std::basic_string<T, Traits, Allocator> const& s) { return s.length(); },

@@ -16,7 +16,7 @@
 #define REVEAL_SERIALIZE_SIMPLEBINARYREADER_HPP_
 
 #include "reveal/reflect_type.hpp"
-#include "reveal/reflection_type.hpp"
+#include "reveal/traits/reflection_traits.hpp"
 #include "reveal/traits/function_traits.hpp"
 
 // -----------------------------------------------------------------------------
@@ -55,9 +55,7 @@ namespace detail
 			> value_type;
 
 			// Detect if we need to reflect each type or can do it in bulk.
-			reflection_type detector;
-			reflect_type<value_type>(detector, _first_ver);
-			if(detector.is_pod() /* && container is contiguous */)
+			if(reflection_traits<value_type>().is_pod() /* && container is contiguous */)
 			{
 				//value_type* raw_data = reinterpret_cast<value_type*>(stream_.rdbuf()->gptr());
 				//stream_.seekg(stream_.tellg() + num_elements * sizeof(value_type));

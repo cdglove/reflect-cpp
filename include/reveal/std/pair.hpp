@@ -24,7 +24,7 @@
 namespace reveal {
 
 template<typename Visitor, typename T1, typename T2>
-decltype(auto) reflect(Visitor& v, version_t, tag<std::pair<T1, T2>>)
+constexpr decltype(auto) reflect(Visitor& v, version_t, tag<std::pair<T1, T2>>)
 {
 	return v
 		.member("first", &std::pair<T1, T2>::first)

@@ -23,13 +23,13 @@ namespace reveal {
 // -----------------------------------------------------------------------------
 // Reflect type. Called by visitors to issue a call to reflection.
 template<typename T, typename Visitor>
-decltype(auto) reflect_type(Visitor& visitor, version_t version)
+constexpr decltype(auto) reflect_type(Visitor& visitor, version_t version)
 {
 	return reflect(visitor, version, tag<std::decay_t<T>>());
 }
 
 template<typename T, typename Visitor>
-decltype(auto) reflect_type(Visitor& visitor)
+constexpr decltype(auto) reflect_type(Visitor& visitor)
 {
 	return reflect(visitor, reveal::_first_ver, tag<std::decay_t<T>>());
 }

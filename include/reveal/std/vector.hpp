@@ -24,7 +24,7 @@
 namespace reveal {
 
 template<typename Visitor, typename T, typename Allocator>
-decltype(auto) reflect(Visitor& v, version_t, tag<std::vector<T, Allocator>>)
+constexpr decltype(auto) reflect(Visitor& v, version_t, tag<std::vector<T, Allocator>>)
 {
 	return v.container(
 		[](std::vector<T, Allocator> const& vec) { return vec.size(); },

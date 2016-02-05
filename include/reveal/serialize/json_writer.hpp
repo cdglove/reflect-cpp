@@ -119,7 +119,7 @@ namespace detail
 			char const* begin = reinterpret_cast<char const*>(&instance_);
 			char const* end = begin + sizeof(T);
 			stream_ << '"';
-			utility::base64_encode(begin, end, std::ostream_iterator<char>(stream_));
+			utility::base64_encode(begin, end, std::ostreambuf_iterator<char>(stream_));
 			stream_ << '"';
 			return *this;
 		}

@@ -20,79 +20,79 @@
 namespace reveal {
 
 template<typename Visitor>
-inline decltype(auto) reflect(Visitor& v, version_t, tag<char>)
+inline constexpr decltype(auto) reflect(Visitor& v, version_t, tag<char>)
 {
 	return v.primitive();
 }
 
 template<typename Visitor>
-inline decltype(auto) reflect(Visitor& v, version_t, tag<unsigned char>)
+inline constexpr decltype(auto) reflect(Visitor& v, version_t, tag<unsigned char>)
 {
 	return v.primitive();
 }
 
 template<typename Visitor>
-inline decltype(auto) reflect(Visitor& v, version_t, tag<signed char>)
+inline constexpr decltype(auto) reflect(Visitor& v, version_t, tag<signed char>)
 {
 	return v.primitive();
 }
 
 template<typename Visitor>
-inline decltype(auto) reflect(Visitor& v, version_t, tag<short>)
+inline constexpr decltype(auto) reflect(Visitor& v, version_t, tag<short>)
 {
 	return v.primitive();
 }
 
 template<typename Visitor>
-inline decltype(auto) reflect(Visitor& v, version_t, tag<unsigned short>)
+inline constexpr decltype(auto) reflect(Visitor& v, version_t, tag<unsigned short>)
 {
 	return v.primitive();
 }
 
 template<typename Visitor>
-inline decltype(auto) reflect(Visitor& v, version_t, tag<int>)
+inline constexpr decltype(auto) reflect(Visitor& v, version_t, tag<int>)
 {
 	return v.primitive();
 }
 
 template<typename Visitor>
-inline decltype(auto) reflect(Visitor& v, version_t, tag<unsigned int>)
+inline constexpr decltype(auto) reflect(Visitor& v, version_t, tag<unsigned int>)
 {
 	return v.primitive();
 }
 
 template<typename Visitor>
-inline decltype(auto) reflect(Visitor& v, version_t, tag<long>)
+inline constexpr decltype(auto) reflect(Visitor& v, version_t, tag<long>)
 {
 	return v.primitive();
 }
 
 template<typename Visitor>
-inline decltype(auto) reflect(Visitor& v, version_t, tag<unsigned long>)
+inline constexpr decltype(auto) reflect(Visitor& v, version_t, tag<unsigned long>)
 {
 	return v.primitive();
 }
 
 template<typename Visitor>
-inline decltype(auto) reflect(Visitor& v, version_t, tag<long long>)
+inline constexpr decltype(auto) reflect(Visitor& v, version_t, tag<long long>)
 {
 	return v.primitive();
 }
 
 template<typename Visitor>
-inline decltype(auto) reflect(Visitor& v, version_t, tag<unsigned long long>)
+inline constexpr decltype(auto) reflect(Visitor& v, version_t, tag<unsigned long long>)
 {
 	return v.primitive();
 }
 
 template<typename Visitor>
-inline decltype(auto) reflect(Visitor& v, version_t, tag<float>)
+inline constexpr decltype(auto) reflect(Visitor& v, version_t, tag<float>)
 {
 	return v.primitive();
 }
 
 template<typename Visitor>
-inline decltype(auto) reflect(Visitor& v, version_t, tag<double>)
+inline constexpr decltype(auto) reflect(Visitor& v, version_t, tag<double>)
 {
 	return v.primitive();
 }

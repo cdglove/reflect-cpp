@@ -24,3 +24,4 @@ add_executable(
 
 target_link_libraries(test.primary PUBLIC reveal-cpp gtest)
 add_test(test.primary test.primary)
+set_property(TARGET test.primary APPEND PROPERTY COMPILE_DEFINITIONS "_SCL_SECURE_NO_WARNINGS")
