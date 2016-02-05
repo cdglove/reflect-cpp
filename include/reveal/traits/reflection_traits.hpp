@@ -28,76 +28,102 @@ public:
 
 	constexpr bool is_container() const
 	{
-		return reflect_type<T>(is_container_visitor(), _first_ver);
+		return reflect_type<T>(is_container_visitor(), _first_ver).result();
 	}
 
 	constexpr bool is_string() const
 	{
-		return reflect_type<T>(is_container_visitor(), _first_ver);
+		return reflect_type<T>(is_string_visitor(), _first_ver).result();
 	}
 
 	constexpr bool is_pod() const
 	{
-		return reflect_type<T>(is_pod_visitor(), _first_ver);
+		return reflect_type<T>(is_pod_visitor(), _first_ver).result();
 	}
 
 	constexpr bool is_primitive() const
 	{
-		return reflect_type<T>(is_primitive_visitor(), _first_ver);
+		return reflect_type<T>(is_primitive_visitor(), _first_ver).result();
 	}
 
 private:
 
-	struct false_visitor
+	struct false_type
+	{
+		constexpr bool result() const
+		{
+			return false;
+		}
+	};
+
+	struct true_type
+	{
+		constexpr bool result() const
+		{
+			return true;
+		}
+	};
+
+	struct false_visitor : false_type
 	{
 		template<typename Child, typename Parent>
-		constexpr bool member(char const*, Child Parent::*) const
-		{ return false; }
+		constexpr false_visitor member(char const*, Child Parent::*) const
+		{ 
+			return *this;
+		}
 
 		template<typename SizeFun, typename InsertFun>
-		constexpr bool container(SizeFun, InsertFun) const
-		{ return false; }
+		constexpr false_type container(SizeFun, InsertFun) const
+		{ 
+			return false_type();
+		}
 
 		template<typename SizeFun, typename InsertFun>
-		constexpr bool string(SizeFun, InsertFun) const
-		{ return false; }
+		constexpr false_type string(SizeFun, InsertFun) const
+		{ 
+			return false_type();
+		}
 
-		constexpr bool pod() const
-		{ return false; }
+		constexpr false_type pod() const
+		{ 
+			return false_type();
+		}
 
-		constexpr bool primitive() const
-		{ return false; }
+		constexpr false_type primitive() const
+		{ 
+			return false_type();
+		}
 	};
 
 	struct is_container_visitor : false_visitor
 	{
-		constexpr bool container() const
+		constexpr true_type container() const
 		{
-			return true;
+			return true_type();
 		}
 	};
 
 	struct is_string_visitor : false_visitor
 	{
-		constexpr bool string() const
+		constexpr true_type string() const
 		{
-			return true;
+			return true_type();
 		}
 	};
 
 	struct is_pod_visitor : false_visitor
 	{
-		constexpr bool pod() const
+		constexpr true_type pod() const
 		{
-			return true;
+			return true_type();
 		}
 	};
 
 	struct is_primitive_visitor : false_visitor
 	{
-		constexpr bool primitive() const
+		constexpr true_type primitive() const
 		{
-			return true;
+			return true_type();
 		}
 	};
 };

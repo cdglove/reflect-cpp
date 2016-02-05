@@ -57,9 +57,6 @@ namespace detail
 			// Detect if we need to reflect each type or can do it in bulk.
 			if(reflection_traits<value_type>().is_pod() /* && container is contiguous */)
 			{
-				//value_type* raw_data = reinterpret_cast<value_type*>(stream_.rdbuf()->gptr());
-				//stream_.seekg(stream_.tellg() + num_elements * sizeof(value_type));
-				//instance_.insert(raw_data, raw_data + num_elements);
 				instance_.reserve(instance_.size() + num_elements);
 				auto first = instance_.end();
 				instance_.resize(instance_.size() + num_elements);

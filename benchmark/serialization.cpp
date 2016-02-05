@@ -18,8 +18,6 @@
 #include <memory>
 
 #include <stdio.h>
-#include <Windows.h>
-#include <io.h>
 
 #include "reveal/reflect_type.hpp"
 #include "reveal/serialize/json_writer.hpp"
@@ -27,45 +25,59 @@
 #include "reveal/serialize/simple_binary_writer.hpp"
 #include "reveal/serialize/simple_binary_reader.hpp"
 #include "reveal/std/vector.hpp"
-#include "reveal/primitives.hpp"
+#include "../test/test_primitive_types.hpp"
 
-struct primitives
+#ifdef _WIN32
+
+#include <Windows.h>
+#include <io.h>
+
+FILE* open_file(char const* file_name, char const* f)
 {
-	primitives()
-	{}
+	HANDLE file_handle = CreateFile(
+		file_name,
+		*f == 'r' ? GENERIC_READ : GENERIC_WRITE, 
+		0,
+		NULL,
+		*f == 'r' ? OPEN_EXISTING : OPEN_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | (*f == 'w' ? FILE_FLAG_WRITE_THROUGH : 0),
+		NULL
+	);
 
-	char c;
-	short s;
-	int i;
-	float f;
-	double d;
-	std::size_t p;
-};
+	if (file_handle != INVALID_HANDLE_VALUE) 
+	{
+		int file_descriptor = _open_osfhandle((intptr_t)file_handle, 0);
+
+		if (file_descriptor != -1) 
+		{
+			return _fdopen(file_descriptor, f);
+		}
+	}
+
+	return NULL;
+}
+#else
+char const* open_file(char const* file_name, char const* f)
+{
+	return file_name;
+}
+#endif
+
+// -----------------------------------------------------------------------------
+//
+struct primitives_noctor : primitives
+{};
 
 template<typename Visitor>
-decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<primitives>)
+decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<primitives_noctor>)
 {
-	return v
-		.member("c", &primitives::c)
-		.member("s", &primitives::s)
-		.member("i", &primitives::i)
-		.member("f", &primitives::f)
-		.member("d", &primitives::d)
-		.member("p", &primitives::p)
-	;
+	return v.template base<primitives>();
 }
 
-struct primitives_blob
+struct primitives_blob : primitives_noctor
 {
 	primitives_blob()
 	{}
-
-	char c;
-	short s;
-	int i;
-	float f;
-	double d;
-	std::size_t p;
 };
 
 template<typename Visitor>
@@ -274,38 +286,6 @@ BENCHMARK_TEST(BM_BinaryReadBlob);
 //	}
 //}
 //BENCHMARK_TEST(BM_BinaryRead2);
-
-#ifdef _MSC_VER
-FILE* open_file(char const* file_name, char const* f)
-{
-	HANDLE file_handle = CreateFile(
-		file_name,
-		*f == 'r' ? GENERIC_READ : GENERIC_WRITE, 
-		0,
-		NULL,
-		*f == 'r' ? OPEN_EXISTING : OPEN_ALWAYS,
-		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | (*f == 'w' ? FILE_FLAG_WRITE_THROUGH : 0),
-		NULL
-	);
-
-	if (file_handle != INVALID_HANDLE_VALUE) 
-	{
-		int file_descriptor = _open_osfhandle((intptr_t)file_handle, 0);
-
-		if (file_descriptor != -1) 
-		{
-			return _fdopen(file_descriptor, f);
-		}
-	}
-
-	return NULL;
-}
-#else
-char const* open_file(char const* file_name, char const* f)
-{
-	return file_name;
-}
-#endif
 
 static void BM_MemCpyFile(benchmark::State& state) 
 {

@@ -11,12 +11,14 @@
 // http://www.boost.org/LICENSE_1_0.txt
 //
 // ****************************************************************************
-
 #pragma once 
+#ifndef REVEAL_TEST_USERTYPES_HPP_
+#define REVEAL_TEST_USERTYPES_HPP_
 
 #include <vector>
 #include "reveal/std/vector.hpp"
 #include "reveal/primitives.hpp"
+#include "test_primitive_types.hpp"
 
 namespace ns
 {
@@ -65,3 +67,35 @@ namespace ns
 		;
 	}
 }
+
+// -----------------------------------------------------------------------------
+//
+struct compound_struct
+{
+	primitives p;
+	double v;
+};
+
+template<typename Visitor> constexpr inline
+decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<compound_struct>)
+{
+	return v
+		.member("p", &compound_struct::p)
+	 	.member("v", &compound_struct::v)
+	 ;
+}
+
+// -----------------------------------------------------------------------------
+//
+struct pod
+{
+	int data;
+};
+
+template<typename Visitor> constexpr inline 
+decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<pod>)
+{
+	return v.pod();
+}
+
+#endif // REVEAL_TEST_USERTYPES_HPP_
