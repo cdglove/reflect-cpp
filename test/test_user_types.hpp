@@ -20,53 +20,9 @@
 #include "reveal/primitives.hpp"
 #include "test_primitive_types.hpp"
 
-namespace ns
-{
-	struct Child1
-	{
-		int a_;
-		float b_;
-	};
-
-	template<typename Visitor>
-	decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<Child1>)
-	{
-		return v
-			.member("a_", &Child1::a_)
-			.member("b_", &Child1::b_)
-		;
-	}
-
-	struct Child2
-	{
-		std::vector<double> c_;
-		unsigned int d_;
-	};
-
-	template<typename Visitor>
-	decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<Child2>)
-	{
-		return v
-			.member("c_", &Child2::c_)
-			.member("d_", &Child2::d_)
-		;
-	}
-
-	struct Parent1
-	{
-		Child1 f_;
-		Child2 s_;
-	};
-
-	template<typename Visitor>
-	decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<Parent1>)
-	{
-		return v
-			.member("f_", &Parent1::f_)
-			.member("s_", &Parent1::s_)
-		;
-	}
-}
+// -----------------------------------------------------------------------------
+//
+namespace user {
 
 // -----------------------------------------------------------------------------
 //
@@ -114,6 +70,8 @@ template<typename Visitor> constexpr inline
 decltype(auto) reflect(Visitor& v, reveal::version_t, reveal::tag<pod>)
 {
 	return v.pod();
+}
+
 }
 
 #endif // REVEAL_TEST_USERTYPES_HPP_

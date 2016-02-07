@@ -22,10 +22,7 @@
 
 TEST(Visitor, PrintNames)
 {
-	ns::Parent1 obj;
-	
 	std::stringstream str;
 	reveal::serialize::print_names name_printer(str);
-
-	reveal::reflect_type<ns::Parent1>(name_printer);
+	reveal::reflect_type<user::compound_struct>(name_printer);
 }

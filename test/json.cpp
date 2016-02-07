@@ -130,7 +130,7 @@ TEST_F(Json, ReadStdContainers)
 //
 TEST_F(Json, WriteNestedStruct)
 {
-	compound_struct cs;
+	user::compound_struct cs;
 	std::stringstream str;
 	reveal::serialize::json_writer writer;
 	writer(cs, str);
@@ -139,21 +139,21 @@ TEST_F(Json, WriteNestedStruct)
 
 TEST_F(Json, ReadNestedStruct)
 {
-	compound_struct cs;
+	user::compound_struct cs;
 	cs.p = make_primitives_0s();
 	cs.v = 0.f;
 
 	std::stringstream str(nested_struct_json);
 	reveal::serialize::json_reader reader;
 	reader(cs, str);
-	ASSERT_EQ(compound_struct(), cs);
+	ASSERT_EQ(user::compound_struct(), cs);
 }
 
 // -----------------------------------------------------------------------------
 //
 TEST_F(Json, WritePod)
 {
-	pod p;
+	user::pod p;
 	p.data = 5001;
 	std::stringstream str;
     reveal::serialize::json_writer writer;
@@ -163,7 +163,7 @@ TEST_F(Json, WritePod)
 
 TEST_F(Json, ReadPod)
 {
-	pod p;
+	user::pod p;
 	std::stringstream str(pod_json);
 	reveal::serialize::json_reader reader;
 	reader(p, str);

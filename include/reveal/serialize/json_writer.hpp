@@ -16,6 +16,7 @@
 #define REVEAL_SERIALIZE_JSONWRITER_HPP_
 
 #include "reveal/reflect_type.hpp"
+#include "reveal/utility/base64.hpp"
 
 // -----------------------------------------------------------------------------
 //

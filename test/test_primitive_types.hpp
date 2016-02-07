@@ -15,7 +15,8 @@
 #ifndef REVEAL_TEST_PRIMITIVETYPES_HPP_
 #define REVEAL_TEST_PRIMITIVETYPES_HPP_
 
-#include <reveal/primitives.hpp>
+#include "reveal/primitives.hpp"
+#include <cstring>
 
 // -----------------------------------------------------------------------------
 //

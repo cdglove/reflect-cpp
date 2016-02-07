@@ -27,7 +27,7 @@
 #include "reveal/std/vector.hpp"
 #include "../test/test_primitive_types.hpp"
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 
 #include <Windows.h>
 #include <io.h>

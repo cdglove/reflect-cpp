@@ -55,14 +55,14 @@ namespace detail
 			> value_type;
 
 			// Detect if we need to reflect each type or can do it in bulk.
-			if(reflection_traits<value_type>().is_pod() /* && container is contiguous */)
-			{
-				instance_.reserve(instance_.size() + num_elements);
-				auto first = instance_.end();
-				instance_.resize(instance_.size() + num_elements);
-				stream_.read(reinterpret_cast<char*>(&*first), num_elements * sizeof(value_type));
-			}
-			else
+			//if(reflection_traits<value_type>().is_pod() /* && container is contiguous */)
+			//{
+			//	instance_.reserve(instance_.size() + num_elements);
+			//	auto first = instance_.end();
+			//	instance_.resize(instance_.size() + num_elements);
+			//	stream_.read(reinterpret_cast<char*>(&*first), num_elements * sizeof(value_type));
+			//}
+			//else
 			{
 				for(std::size_t i = 0; i < num_elements; ++i)
 				{

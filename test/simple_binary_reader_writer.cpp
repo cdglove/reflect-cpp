@@ -19,36 +19,43 @@
 #include "reveal/reflect_type.hpp"
 #include "reveal/serialize/simple_binary_writer.hpp"
 #include "reveal/serialize/simple_binary_reader.hpp"
+#include "test_primitive_types.hpp"
+#include "test_container_types.hpp"
 #include "test_user_types.hpp"
 
-TEST(BinaryIO, Read_Write)
+TEST(SimpleBinary, ReadWritePrimitives)
 {
-	ns::Parent1 obj;
-
-	obj.f_.a_ = 1;
-	obj.f_.b_ = 2;
-	obj.s_.c_.push_back(3);
-	obj.s_.c_.push_back(4);
-	obj.s_.d_ = 5;
-	
-	std::stringstream archive;
-
-	reveal::serialize::simple_binary_writer binary_writer;
-
-	binary_writer(obj, archive);
-
-	obj.f_.a_ = 0;
-	obj.f_.b_ = 0;
-	obj.s_.c_.clear();
-	obj.s_.d_ = 0;
-
+	primitives v = make_primitives_values();
+	reveal::serialize::simple_binary_writer writer;
+	std::stringstream str;
+	writer(v, str);
+	v = make_primitives_0s();
 	reveal::serialize::simple_binary_reader binary_reader;
+	binary_reader(v, str);
+	EXPECT_EQ(make_primitives_values(), v);
+}
 
-	binary_reader(obj, archive);
+TEST(SimpleBinary, ReadWriteStdContainers)
+{
+	std_containers c = make_containers_values();
+	reveal::serialize::simple_binary_writer writer;
+	std::stringstream str;
+	writer(c, str);
+	c = make_containers_empty();
+	reveal::serialize::simple_binary_reader binary_reader;
+	binary_reader(c, str);
+	EXPECT_EQ(make_containers_values(), c);
+}
 
-	EXPECT_EQ(obj.f_.a_, 1);
-	EXPECT_EQ(obj.f_.b_, 2);
-	EXPECT_EQ(obj.s_.c_[0], 3);
-	EXPECT_EQ(obj.s_.c_[1], 4);
-	EXPECT_EQ(obj.s_.d_, 5);
+TEST(SimpleBinary, ReadWritePod)
+{
+	user::pod p;
+	p.data = 1;
+	reveal::serialize::simple_binary_writer writer;
+	std::stringstream str;
+	writer(p, str);
+	p.data = 0;
+	reveal::serialize::simple_binary_reader binary_reader;
+	binary_reader(p, str);
+	EXPECT_EQ(p.data, 1);
 }
