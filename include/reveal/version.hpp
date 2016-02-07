@@ -2,7 +2,7 @@
 // 
 // reveal/version.hpp
 //
-// Strongly type version with enough space to hold 65000 versions
+// Strongly type version with enough space to hold 30000 versions
 //
 // Copyright Chris Glover 2016
 //
@@ -19,11 +19,12 @@ namespace reveal {
 
 // -----------------------------------------------------------------------------
 //
-enum version_t
+enum class version_t : unsigned short
 {
-	_first_ver = 0,
-	_last_ver = 0xFFFF
+	first = 0,
 };
+
+const version_t _first_ver = version_t::first;
 
 inline version_t ver(unsigned short v)
 {
@@ -31,5 +32,6 @@ inline version_t ver(unsigned short v)
 }
 
 }
+
 
 #endif // REVEAL_VERSION_HPP_
