@@ -1,6 +1,6 @@
 // *****************************************************************************
 // 
-// reflect/test/print_names.cpp
+// reveal/test/print_names.cpp
 //
 // Uses reflection to print the names of all of the mamber variables of a type
 // hierarchy.
@@ -12,15 +12,20 @@
 // http://www.boost.org/LICENSE_1_0.txt
 //
 // ****************************************************************************
-#include <iostream>
+#include "gtest/gtest.h"
 
-#include "reflect/reflect_type.hpp"
-#include "reflect/serialize/print_names.hpp"
+#include <sstream>
+
+#include "reveal/reflect_type.hpp"
+#include "reveal/serialize/print_names.hpp"
 #include "test_user_types.hpp"
 
-int main()
+TEST(Visitor, PrintNames)
 {
-	reflect::serialize::print_names name_printer(std::cout);
-	reflect::reflect_type<ns::Parent1>(name_printer, reflect::_first_ver);
-	return 0;
+	ns::Parent1 obj;
+	
+	std::stringstream str;
+	reveal::serialize::print_names name_printer(str);
+
+	reveal::reflect_type<ns::Parent1>(name_printer);
 }

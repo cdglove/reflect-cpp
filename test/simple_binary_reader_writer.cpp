@@ -1,6 +1,6 @@
 // *****************************************************************************
 // 
-// reflect/test/binary_reader_writer.cpp
+// reveal/test/binary_reader_writer.cpp
 //
 // Tests the functionality of the binary reader and writer.
 //
@@ -11,15 +11,17 @@
 // http://www.boost.org/LICENSE_1_0.txt
 //
 // ****************************************************************************
+#include "gtest/gtest.h"
+
 #include <sstream>
 #include <cassert>
 
-#include "reflect/reflect_type.hpp"
-#include "reflect/serialize/simple_binary_writer.hpp"
-#include "reflect/serialize/simple_binary_reader.hpp"
+#include "reveal/reflect_type.hpp"
+#include "reveal/serialize/simple_binary_writer.hpp"
+#include "reveal/serialize/simple_binary_reader.hpp"
 #include "test_user_types.hpp"
 
-int main()
+TEST(BinaryIO, Read_Write)
 {
 	ns::Parent1 obj;
 
@@ -31,29 +33,22 @@ int main()
 	
 	std::stringstream archive;
 
-	reflect::serialize::detail::simple_binary_writer_impl<
-		ns::Parent1,
-		std::stringstream
-	> binary_writer(obj, archive);
+	reveal::serialize::simple_binary_writer binary_writer;
 
-	reflect::reflect_type<ns::Parent1>(binary_writer, reflect::_first_ver);
+	binary_writer(obj, archive);
 
 	obj.f_.a_ = 0;
 	obj.f_.b_ = 0;
 	obj.s_.c_.clear();
 	obj.s_.d_ = 0;
 
-	reflect::serialize::simple_binary_reader<
-		std::stringstream
-	> binary_reader(archive);
+	reveal::serialize::simple_binary_reader binary_reader;
 
-	binary_reader(obj);
+	binary_reader(obj, archive);
 
-	assert(obj.f_.a_ == 1);
-	assert(obj.f_.b_ == 2);
-	assert(obj.s_.c_[0] == 3);
-	assert(obj.s_.c_[1] == 4);
-	assert(obj.s_.d_ == 5);
-	
-	return 0;
+	EXPECT_EQ(obj.f_.a_, 1);
+	EXPECT_EQ(obj.f_.b_, 2);
+	EXPECT_EQ(obj.s_.c_[0], 3);
+	EXPECT_EQ(obj.s_.c_[1], 4);
+	EXPECT_EQ(obj.s_.d_, 5);
 }

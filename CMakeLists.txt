@@ -2,7 +2,7 @@
 # 
 # CMakeLists.txt
 #
-# Master CMake build script for reflect-cpp
+# Master CMake build script for reveal-cpp
 #
 # Copyright Chris Glover 2016
 #
@@ -14,15 +14,16 @@
 
 cmake_minimum_required(VERSION 3.2)
 set(CMAKE_LEGACY_CYGWIN_WIN32 0)
-project (reflect-cpp)
+project (reveal-cpp)
 
 ###############################################################################
 #
 # Options
 #
 ###############################################################################
-option( REFLECT_BUILD_TESTS "Build the reflect-cpp project tests." ON)
-option( REFLECT_BUILD_DOCS  "Allow build the reflect-cppREFLECT project docs." ON)
+option( REFLECT_BUILD_TESTS "Build the reveal-cpp project tests." ON)
+option( REFLECT_BUILD_BENCHMARKS "Build the reveal-cpp project benchmarks." ON)
+option( REFLECT_BUILD_DOCS  "Allow build the reveal-cppREFLECT project docs." ON)
 
 ###############################################################################
 #
@@ -33,7 +34,7 @@ include(GNUInstallDirs)
 if(WIN32 AND NOT CYGWIN)
 	set(DEF_INSTALL_CMAKE_DIR CMake)
 else()
-	set(DEF_INSTALL_CMAKE_DIR lib/cmake/reflect-cpp)
+	set(DEF_INSTALL_CMAKE_DIR lib/cmake/reveal-cpp)
 endif()
 set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
 
@@ -49,6 +50,13 @@ endif()
 ###############################################################################
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 14)
+
+###############################################################################
+#
+# Find Boost
+#
+###############################################################################
+find_package( Boost REQUIRED )
 
 ###############################################################################
 #
@@ -71,13 +79,64 @@ endif()
 #
 ###############################################################################
 file(GLOB_RECURSE PROJECT_HEADERS include/*.hpp)
-add_library(reflect-cpp INTERFACE)
-target_sources(reflect-cpp INTERFACE ${PROJECT_HEADERS})
-target_include_directories(reflect-cpp INTERFACE "include/")
+add_library(reveal-cpp INTERFACE)
+target_sources(reveal-cpp INTERFACE ${PROJECT_HEADERS})
+target_include_directories(reveal-cpp INTERFACE "include/")
+target_include_directories(reveal-cpp SYSTEM INTERFACE ${Boost_INCLUDE_DIRS})
 
+###############################################################################
+#
+# See if w'ere testing.
+#
+###############################################################################
 if(REFLECT_BUILD_TESTS)
   enable_testing()
+
+  #############################################################################
+  #
+  # Add google test
+  #
+  #############################################################################
+  include(contrib/cmaketools/DownloadProject.cmake)
+  download_project(
+    PROJ                googletest
+    GIT_REPOSITORY      https://github.com/google/googletest.git
+    GIT_TAG             master
+  )
+
+  # Prevent GoogleTest from overriding our compiler/linker options
+  # when building with Visual Studio
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+  add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
+
 	add_subdirectory(test)
+endif()
+
+###############################################################################
+#
+# See if w'ere testing.
+#
+###############################################################################
+if(REFLECT_BUILD_BENCHMARKS)
+  enable_testing()
+
+  #############################################################################
+  #
+  # Add google test
+  #
+  #############################################################################
+  include(contrib/cmaketools/DownloadProject.cmake)
+  download_project(
+    PROJ                googlebenchmark
+    GIT_REPOSITORY      https://github.com/google/benchmark.git
+    GIT_TAG             master
+  )
+
+  set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+  add_subdirectory(${googlebenchmark_SOURCE_DIR} ${googlebenchmark_BINARY_DIR})
+
+  add_subdirectory(benchmark)
 endif()
 
 # no docs at the moment
@@ -98,7 +157,7 @@ if(CHECK_INCLUDES_VIA_IWYU)
       -Xiwyu --mapping_file=${IWYU_MAPFILE_DIR}boost-all.imp
       -Xiwyu --mapping_file=${IWYU_MAPFILE_DIR}boost-all-private.imp
     )
-    set_property(TARGET reflect-cpp PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${IWYU_PATH_AND_OPTIONS})
+    set_property(TARGET reveal-cpp PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${IWYU_PATH_AND_OPTIONS})
   endif()
 endif()
 
@@ -106,35 +165,35 @@ endif()
 #
 # Export Targets
 #
-# (so reflect-cpp can be easily used by other CMake projects)
+# (so reveal-cpp can be easily used by other CMake projects)
 # [see http://www.cmake.org/Wiki/CMake/Tutorials/How_to_create_a_ProjectConfig.cmake_file]
 #
 ###############################################################################
 
 # Add all targets to the build-tree export set
-export(TARGETS reflect-cpp
-	FILE "${PROJECT_BINARY_DIR}/reflectCppTargets.cmake")
+export(TARGETS reveal-cpp
+	FILE "${PROJECT_BINARY_DIR}/revealCppTargets.cmake")
 # Export the package for use from the build-tree
 # (this registers the build-tree with a global CMake-registry)
-export(PACKAGE reflect-cpp)
-# Create the reflectCppConfig.cmake and reflectCppConfigVersion files
+export(PACKAGE reveal-cpp)
+# Create the revealCppConfig.cmake and revealCppConfigVersion files
 file(RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}" "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
 # ... for the build tree
-configure_file(reflectCppConfig.cmake.in
-	"${PROJECT_BINARY_DIR}/reflectCppConfig.cmake" @ONLY)
+configure_file(revealCppConfig.cmake.in
+	"${PROJECT_BINARY_DIR}/revealCppConfig.cmake" @ONLY)
 # ... for the install tree
-configure_file(reflectCppConfig.cmake.in
-	"${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/reflectCppConfig.cmake" @ONLY)
+configure_file(revealCppConfig.cmake.in
+	"${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/revealCppConfig.cmake" @ONLY)
 # ... for both
-configure_file(reflectCppConfig.cmake.in
-    "${PROJECT_BINARY_DIR}/reflectCppConfigVersion.cmake" @ONLY)
-# Install the reflectCppConfig.cmake
+configure_file(revealCppConfig.cmake.in
+    "${PROJECT_BINARY_DIR}/revealCppConfigVersion.cmake" @ONLY)
+# Install the revealCppConfig.cmake
 install(FILES
-    "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/reflectCppConfig.cmake"
+    "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/revealCppConfig.cmake"
     DESTINATION "${INSTALL_CMAKE_DIR}"
     COMPONENT dev)
 # Install the export set for use with the install-tree
-# install(EXPORT reflectCppConfigTargets
+# install(EXPORT revealCppConfigTargets
 #     DESTINATION "${INSTALL_CMAKE_DIR}"
 #     COMPONENT dev)
 
