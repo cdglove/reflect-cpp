@@ -126,12 +126,25 @@ namespace detail
 
 		json_writer_impl<T, Stream>& primitive()
 		{
-			stream_ << instance_;
+			write_value(instance_);
 			return *this;
 		}
 
 	private:
 
+		// Need to intercept writes or signed chars because the
+		// boost json parser doesn't like it when chars are \x escaped.
+		void write_value(signed char value)
+		{
+			stream_ << static_cast<int>(value);
+		}
+
+		template<typename V> 
+		void write_value(V const& value)
+		{
+			stream_ << value;
+		}
+		
 		void indent()
 		{
 			for(int i = 0; i < indent_; ++i)

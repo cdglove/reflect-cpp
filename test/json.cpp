@@ -28,9 +28,60 @@ class Json : public ::testing::Test
 {
 public:
 
-	char const* struct_json = "{\n  \"integer\": 10,\n  \"real\": 5,\n  \"string\": \"Hello World!\"\n}";
-	char const* nested_struct_json = "{\n  \"f\": 1,\n  \"v\": {\n    \"integer\": 10,\n    \"real\": 5,\n    \"string\": \"Hello World!\"\n  },\n  \"i\": 2\n}";
-	char const* container_json = "{\n  \"v\": [0, 1],\n  \"m\": [{\n    \"first\": 1,\n    \"second\": 10\n  }, {\n    \"first\": 2,\n    \"second\": 20\n  }]\n}";
+	char const* primitives_json = 
+					"{\n"
+					"  \"char_\": 1,\n"
+					"  \"uchar_\": 2,\n"
+					"  \"schar_\": 3,\n"
+					"  \"short_\": 4,\n"
+					"  \"ushort_\": 5,\n"
+					"  \"int_\": 6,\n"
+					"  \"uint_\": 7,\n"
+					"  \"long_\": 8,\n"
+					"  \"ulong_\": 9,\n"
+					"  \"llong_\": 10,\n"
+					"  \"ullong_\": 11,\n"
+					"  \"float_\": 12,\n"
+					"  \"double_\": 13\n"
+					"}";
+					
+	char const* containers_json = 
+					"{\n"
+					"  \"pair_\": {\n"
+					"    \"first\": 1,\n"
+					"    \"second\": 2\n"
+					"  },\n"
+					"  \"vector_\": [10, 20],\n"
+					"  \"map_\": [{\n"
+					"    \"first\": 100,\n"
+					"    \"second\": 200\n"
+					"  }, {\n"
+					"    \"first\": 300,\n"
+					"    \"second\": 400\n"
+					"  }],\n"
+					"  \"string_\": \"Hello World!\"\n"
+					"}";
+					
+	char const* nested_struct_json = 
+					"{\n"
+					"  \"p\": {\n"
+					"    \"char_\": 1,\n"
+					"    \"uchar_\": 2,\n"
+					"    \"schar_\": 3,\n"
+					"    \"short_\": 4,\n"
+					"    \"ushort_\": 5,\n"
+					"    \"int_\": 6,\n"
+					"    \"uint_\": 7,\n"
+					"    \"long_\": 8,\n"
+					"    \"ulong_\": 9,\n"
+					"    \"llong_\": 10,\n"
+					"    \"ullong_\": 11,\n"
+					"    \"float_\": 12,\n"
+					"    \"double_\": 13\n"
+					"  },\n"
+					"  \"v\": -1\n"
+					"}";
+					
 	char const* pod_json = "\"iRMAAA\"";
 };
 
@@ -38,55 +89,64 @@ public:
 //
 TEST_F(Json, WritePrimitives)
 {
-	primitives v;
-	
+	primitives v = make_primitives_values();
 	reveal::serialize::json_writer writer;
 	std::stringstream str;
 	writer(v, str);
+	EXPECT_EQ(primitives_json, str.str());
 }
 
 TEST_F(Json, ReadPrimitives)
 {
-	primitives v;
+	primitives v = make_primitives_0s();
 	reveal::serialize::json_reader reader;
-	std::stringstream str(struct_json);
+	std::stringstream str(primitives_json);
 	reader(v, str);
+	EXPECT_EQ(make_primitives_values(), v);
 }
 
 // -----------------------------------------------------------------------------
 //
 TEST_F(Json, WriteStdContainers)
 {
-	std_containers c;
+	std_containers c = make_containers_values();
 	std::stringstream str;
     reveal::serialize::json_writer writer;
 	writer(c, str);
+
+	EXPECT_EQ(containers_json, str.str());
 }
 
 TEST_F(Json, ReadStdContainers)
 {
-	std_containers c;
+	std_containers c = make_containers_empty();
 	reveal::serialize::json_reader reader;
-	std::stringstream str(container_json);
+	std::stringstream str(containers_json);
 	reader(c, str);
+	EXPECT_EQ(make_containers_values(), c);
 }
 
 // -----------------------------------------------------------------------------
 //
 TEST_F(Json, WriteNestedStruct)
 {
-	compound_struct nv;
+	compound_struct cs;
 	std::stringstream str;
 	reveal::serialize::json_writer writer;
-	writer(nv, str);
+	writer(cs, str);
+	EXPECT_EQ(nested_struct_json, str.str());
 }
 
 TEST_F(Json, ReadNestedStruct)
 {
-	compound_struct nv;
+	compound_struct cs;
+	cs.p = make_primitives_0s();
+	cs.v = 0.f;
+
 	std::stringstream str(nested_struct_json);
 	reveal::serialize::json_reader reader;
-	reader(nv, str);
+	reader(cs, str);
+	ASSERT_EQ(compound_struct(), cs);
 }
 
 // -----------------------------------------------------------------------------
