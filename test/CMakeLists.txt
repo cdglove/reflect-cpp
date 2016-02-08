@@ -20,6 +20,7 @@ add_executable(
 	simple_binary_reader_writer.cpp
 	print_names.cpp
 	json.cpp
+	operators.cpp
 )
 
 target_link_libraries(test.primary PUBLIC reveal-cpp gtest)

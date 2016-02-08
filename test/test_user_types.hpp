@@ -17,7 +17,6 @@
 
 #include <vector>
 #include "reveal/std/vector.hpp"
-#include "reveal/primitives.hpp"
 #include "test_primitive_types.hpp"
 
 // -----------------------------------------------------------------------------
