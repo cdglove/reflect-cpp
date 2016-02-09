@@ -12,6 +12,9 @@
 // http://www.boost.org/LICENSE_1_0.txt
 //
 // ****************************************************************************
+#pragma once
+#ifndef REVEAL_NULLVISITOR_H_
+#define REVEAL_NULLVISITOR_H_
 
 // ----------------------------------------------------------------------------
 //
@@ -41,3 +44,5 @@ public:
 };
 
 }
+
+#endif // REVEAL_NULLVISITOR_H_
