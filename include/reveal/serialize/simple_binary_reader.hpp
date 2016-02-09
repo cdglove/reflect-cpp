@@ -28,7 +28,7 @@ namespace reveal { namespace serialize {
 namespace detail
 {
 	template<typename T, typename Stream>
-	class simple_binary_reader_impl  : public default_visitor<simple_binary_reader_impl<T, Stream>>
+	class simple_binary_reader_impl 
 	{
 	public:
 		simple_binary_reader_impl(T& t, Stream& s)
@@ -75,6 +75,12 @@ namespace detail
 			}
 
 			return *this;
+		}
+
+		template<typename SizeFun, typename InsertFun>
+		simple_binary_reader_impl<T, Stream>& string(SizeFun size, InsertFun insert)
+		{
+			return container(size, insert);
 		}
 
 		simple_binary_reader_impl<T, Stream>& pod()

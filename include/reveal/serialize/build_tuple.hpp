@@ -26,7 +26,7 @@ namespace reveal { namespace serialize {
 // -----------------------------------------------------------------------------
 //
 template<typename T, typename Tuple>
-class build_tuple : public default_visitor
+class build_tuple
 {
 public:
 

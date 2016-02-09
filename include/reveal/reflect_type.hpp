@@ -34,32 +34,6 @@ constexpr decltype(auto) reflect_type(Visitor& visitor)
 	return reflect(visitor, reveal::_first_ver, tag<std::decay_t<T>>());
 }
 
-// -----------------------------------------------------------------------------
-// 
-template<typename Derived>
-class default_visitor
-{
-public:
-
-	template<typename Child, typename Parent>
-	Derived& member(char const*, Child Parent::*)
-	{ return *static_cast<Derived*>(this); }
-
-	template<typename SizeFun, typename InsertFun>
-	Derived& container(SizeFun, InsertFun)
-	{ return *static_cast<Derived*>(this); }
-
-	template<typename SizeFun, typename InsertFun>
-	Derived& string(SizeFun s, InsertFun i)
-	{ return static_cast<Derived*>(this)->container(s, i); }
-
-	Derived& pod()
-	{ return *static_cast<Derived*>(this); }
-
-	Derived& primitive()
-	{ return *static_cast<Derived*>(this); }
-};
-
 }
 
 #endif // REVEAL_REFLECTTYPE_HPP_

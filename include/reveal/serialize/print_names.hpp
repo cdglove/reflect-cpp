@@ -19,10 +19,11 @@
 #include <iterator>
 #include <algorithm>
 #include "reveal/reflect_type.hpp"
+#include "reveal/null_visitor.hpp"
 
 namespace reveal { namespace serialize {
 
-class print_names : public default_visitor<print_names>
+class print_names : public null_visitor
 {
 public:
 

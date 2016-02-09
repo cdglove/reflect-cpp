@@ -19,7 +19,7 @@
 // -----------------------------------------------------------------------------
 //
 template<typename T>
-struct equality_visitor : reveal::default_visitor<equality_visitor<T>>
+struct equality_visitor
 {
 	equality_visitor(bool& eq, T const& lhs, T const& rhs)
 		: eq_(eq)
